@@ -1,7 +1,7 @@
 import { Card, Icon, Label} from 'semantic-ui-react'
 import Moment from 'moment'
 import 'moment/locale/es-mx'
-import moment from 'moment'
+
 
 const Evento = ({evento}) => {
 

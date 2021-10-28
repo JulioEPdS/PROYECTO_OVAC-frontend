@@ -1,16 +1,16 @@
 //Contexto
-import { AuthContext } from '../../../auth/AuthContext'
-import { types } from '../../../types/types'
+import { AuthContext } from '../../../../auth/AuthContext'
+import { types } from '../../../../types/types'
 //Gráfico y funcional
 import React, { useContext, useState} from 'react'
 import { Route, Switch, NavLink, useHistory } from "react-router-dom"
 import { Menu, Grid, Button, Icon, Header} from 'semantic-ui-react'
 
 //Componentes-Vistas
-import Inicio from '../main_ovac/views/InicioView'
-import Datos from '../main_ovac/views/DatosView'
-import Eventos from '../main_ovac/views/EventosView'
-import Anexos from '../main_ovac/views/AnexosView'
+import Inicio from './views/InicioView'
+import Datos from './views/DatosView'
+import Eventos from './views/EventosView'
+import Anexos from './views/AnexosView'
 
 
 export const HomeLayout = () => {
