@@ -1,6 +1,6 @@
 //Contexto
-import { AuthContext } from '../../../../auth/AuthContext'
-import { types } from '../../../../types/types'
+import { AuthContext } from '../../../auth/AuthContext'
+import { types } from '../../../types/types'
 //Gráfico y funcional
 import React, { useContext, useState} from 'react'
 import { Route, Switch, NavLink, useHistory } from "react-router-dom"
@@ -31,7 +31,7 @@ export const HomeLayout = () => {
     const handleItemClick = (e,{name}) => setState({activeItem: name});
 
     //Estilos
-    const menuStyle = { border: 'none', borderRadius: 0, boxShadow: 0, marginBottom: '1em', transition: 'box-shadow 0.5s ease, padding 0.5s ease', backgroundColor: '#b09a5b'}
+    const menuStyle = { border: 'none', borderRadius: 0, boxShadow: 0, marginBottom: '1em', backgroundColor: '#b09a5b'}
     const menuSeconds = {    marginTop: '1em',    marginLeft: '1em'}
 
     const handleLogout = () => {        
@@ -47,7 +47,7 @@ export const HomeLayout = () => {
             <Menu borderless inverted style={menuStyle}>
                 <Menu.Item>
                     <Header as='h3' inverted>
-                        <Icon name='newspaper' inverted style={{fontSize:'3rem'}}/>
+                        
                         <Header.Content style={{fontSize:'2rem'}}>OVAC
                             <Header.Subheader>Oficina Virtual de Atención a Capacitaciones</Header.Subheader>
                         </Header.Content>
@@ -60,9 +60,10 @@ export const HomeLayout = () => {
                   position='right'
                 />
                 <Menu.Item
-                  name={user.name}
+                  name={user.name}         
                   active={activeItem === user.name}
                   onClick={handleItemClick}
+                  color='brown'          
                   
                 />
                 <Menu.Item >
@@ -82,7 +83,7 @@ export const HomeLayout = () => {
                         <Menu.Item                        
                           icon='home'
                           name='inicio'
-                          active={activeItem === 'inicio'}
+                          active={activeItem === 'inicio'}                          
                           onClick={handleItemClick}
                           as={NavLink} to='/ovac/inicio'
                         />

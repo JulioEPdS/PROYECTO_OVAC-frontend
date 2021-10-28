@@ -4,8 +4,8 @@ import { AuthContext } from "../auth/AuthContext"
 import PrivateRoute from "./PrivateRoute"
 import PublicRoute from "./PublicRoute"
 
-import AppView from '../pages/app_ovac/main_ovac/app/AppLayout'
-import LogIn from '../pages/app_ovac/main_ovac/login/LoginPage'
+import AppView from '../pages/app_ovac/app/AppLayout'
+import LogIn from '../pages/app_ovac/login/LoginPage'
 import NotfoundPage from '../pages/NotfoundPage'
 
 export default function AppRouter() {

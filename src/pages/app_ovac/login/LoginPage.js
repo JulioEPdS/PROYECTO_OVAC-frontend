@@ -4,10 +4,9 @@ import Axios from 'axios'
 import buildings from './img/buildings.svg'
 import avatar from './img/avatar.svg'
 
-import './LoginPage.css'
-import { AuthContext } from '../../../../auth/AuthContext'
+import { AuthContext } from '../../../auth/AuthContext'
 import { Button, Form, Header, Icon, Segment, Message, Image, Transition, Grid } from 'semantic-ui-react'
-import { types } from '../../../../types/types'
+import { types } from '../../../types/types'
 
 
 
