@@ -25,7 +25,7 @@ const Evento = ({evento}) => {
 
     //Building the response chunck element
     return (
-        <Card link>
+        <Card link key={evento.UUID}>
             <Card.Content>                        
                 {/*<Label color={typecolor} ribbon='right' icon={typeicon} content={evento.type}/>*/}
                 <Card.Header>{evento.Título}</Card.Header>
