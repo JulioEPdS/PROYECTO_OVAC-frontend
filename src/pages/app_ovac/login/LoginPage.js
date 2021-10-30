@@ -159,7 +159,7 @@ export default class LoginPage extends Component {
           
 
         </Grid.Row>
-        <Grid.Row only='mobile'>
+        <Grid.Row only='mobile' style={{width:'100%'}}>
         <Header
             size='huge'
             content='Oficina Virtual de Atención a Capacitaciones'

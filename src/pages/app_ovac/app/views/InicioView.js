@@ -3,7 +3,7 @@ import { Statistic, Grid, Card, Icon, Header } from 'semantic-ui-react'
 export default function Home() {
     return (
         <div>
-                <Grid.Row style={{marginTop:'1rem'}}>
+                <Grid.Row>
                     <Card fluid color='yellow'>
                       <Card.Content>
                         <Card.Header>

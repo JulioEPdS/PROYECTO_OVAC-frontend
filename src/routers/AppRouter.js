@@ -4,7 +4,7 @@ import { AuthContext } from "../auth/AuthContext"
 import PrivateRoute from "./PrivateRoute"
 import PublicRoute from "./PublicRoute"
 
-import AppView from '../pages/app_ovac/app/AppLayout_P'
+import AppView from '../pages/app_ovac/app/AppLayout'
 import LogIn from '../pages/app_ovac/login/LoginPage'
 import NotfoundPage from '../pages/NotfoundPage'
 

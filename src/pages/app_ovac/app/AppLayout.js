@@ -5,6 +5,7 @@ import { types } from '../../../types/types'
 import React, { useContext, useState} from 'react'
 import { Route, Switch, NavLink, useHistory } from "react-router-dom"
 import { Menu, Grid, Button, Icon, Header} from 'semantic-ui-react'
+import iwt from './img/iwt.svg'
 
 //Componentes-Vistas
 import Inicio from './views/InicioView'
@@ -28,11 +29,7 @@ export const HomeLayout = () => {
 
     const {dispatch} = useContext(AuthContext)
     
-    const handleItemClick = (e,{name}) => setState({activeItem: name});
-
-    //Estilos
-    const menuStyle = { border: 'none', borderRadius: 0, boxShadow: 0, marginBottom: '1em', backgroundColor: '#b09a5b'}
-    const menuSeconds = {    marginTop: '1em',    marginLeft: '1em'}
+    const handleItemClick = (e,{name}) => setState({activeItem: name});            
 
     const handleLogout = () => {        
         dispatch({
@@ -44,11 +41,19 @@ export const HomeLayout = () => {
 
         return (<>
         
-            <Menu borderless inverted style={menuStyle}>
+            <Menu borderless inverted 
+                style={{
+                    border: 'none', 
+                    borderRadius: 0, 
+                    boxShadow: 0,                     
+                    backgroundColor: '#b09a5b'
+                }}>
                 <Menu.Item>
-                    <Header as='h3' inverted>
-                        
-                        <Header.Content style={{fontSize:'2rem'}}>OVAC
+                    <img src={iwt} alt='Icon' style={{fontSize:'2rem'}}/>
+                </Menu.Item>
+                <Menu.Item>
+                    <Header as='h3' inverted>                        
+                        <Header.Content style={{fontSize:'2.2rem'}}>OVAC
                             <Header.Subheader>Oficina Virtual de Atención a Capacitaciones</Header.Subheader>
                         </Header.Content>
                     </Header>
@@ -78,8 +83,8 @@ export const HomeLayout = () => {
 
 
             <Grid>
-                <Grid.Column computer={2} tablet={2} mobile={5}>
-                    <Menu  fluid vertical tabular style={menuSeconds} color='brown'>
+                <Grid.Column style={{width:'11%', marginTop:'1rem', marginLeft:'1rem'}}>
+                    <Menu  fluid vertical tabular color='brown'>
                         <Menu.Item                        
                           icon='home'
                           name='inicio'
@@ -110,7 +115,7 @@ export const HomeLayout = () => {
                         />
                     </Menu>
                 </Grid.Column>
-                <Grid.Column computer={13} tablet={13} mobile={10}>
+                <Grid.Column style={{marginTop:'0.5rem', width:'86%'}}>
                         <Switch>
                             <Route exact path='/ovac/inicio' component={Inicio}/>
                             <Route exact path='/ovac/datos' component={Datos}/>
