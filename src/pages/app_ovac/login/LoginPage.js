@@ -70,7 +70,7 @@ export default class LoginPage extends Component {
   }
 
   render() {
-    const { user, password } = this.state
+    const { user, password, loginfailed } = this.state
 
 
     return (
@@ -135,7 +135,7 @@ export default class LoginPage extends Component {
                   </Button.Content>
                 </Button>
                 <Transition.Group animation='swing left'>
-                  {this.state.loginfailed &&
+                  {loginfailed &&
                     <Message negative          
                       header='Inicio de sesión fallida  :('
                       content='tal vez hizo falta una letra?'
