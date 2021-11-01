@@ -19,7 +19,8 @@ export default class LoginPage extends Component {
     this.state = {
       loginfailed: false,
       user: '',
-      password: ''
+      password: '',
+      tryingtolog: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -43,6 +44,7 @@ export default class LoginPage extends Component {
   }
 
   handleSubmit(e) {
+    this.setState({tryingtolog: true})
     e.preventDefault()        
     const {dispatch} = this.context
     const { user, password } = this.state
@@ -63,14 +65,14 @@ export default class LoginPage extends Component {
       }
       this.props.history.replace('/ovac/inicio')
     }).catch((err) => {
-      this.setState({ loginfailed: true })      
+      this.setState({ loginfailed: true, tryingtolog: false })
     })
     //setErrorM(reject)    
     //window.location.href='./ovac/inicio'
   }
 
   render() {
-    const { user, password, loginfailed } = this.state
+    const { user, password, loginfailed, tryingtolog } = this.state
 
 
     return (
@@ -128,7 +130,9 @@ export default class LoginPage extends Component {
                   fluid size='large'
                   type='submit'
                   animated                  
-                  disabled={!this.validateForm({ user, password })}>
+                  disabled={!this.validateForm({ user, password })}
+                  loading={tryingtolog}
+                  >
                   <Button.Content visible>Acceder</Button.Content>
                   <Button.Content hidden>
                     <Icon name='sign-in alternate' />

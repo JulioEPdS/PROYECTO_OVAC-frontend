@@ -17,10 +17,7 @@ export default function AppRouter() {
                     <Redirect to='/login'/>
                 </Route>
                 <PublicRoute exact path='/login' component={LogIn} isAuthenticated={user.logged}/>
-                <PrivateRoute exact path='/ovac/inicio' component={AppView} isAuthenticated={user.logged}/>
-                <PrivateRoute exact path='/ovac/datos' component={AppView} isAuthenticated={user.logged}/>
-                <PrivateRoute exact path='/ovac/eventos' component={AppView} isAuthenticated={user.logged}/>
-                <PrivateRoute exact path='/ovac/anexos' component={AppView} isAuthenticated={user.logged}/>
+                <PrivateRoute path='/ovac/' component={AppView} isAuthenticated={user.logged}/>                
 
                 <Route path='/404' component={NotfoundPage} />
                 

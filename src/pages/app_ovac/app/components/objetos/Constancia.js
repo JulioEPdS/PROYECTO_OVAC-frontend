@@ -1,6 +1,6 @@
 import { List, Button, } from "semantic-ui-react";
 
-export const Constancia = ({constancia}) => {
+const Constancia = ({constancia}) => {
   return (
     <List.Item key={constancia.id}>
       <List.Content floated="right">
@@ -13,3 +13,5 @@ export const Constancia = ({constancia}) => {
     </List.Item>
   )
 }
+
+export default Constancia
