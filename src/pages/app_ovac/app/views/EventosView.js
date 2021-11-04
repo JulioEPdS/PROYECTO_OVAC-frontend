@@ -1,6 +1,6 @@
 //Gráfico y de estado
 import { Component } from 'react'
-import { Grid, Header, Segment, Card, Button, Icon, Image, Message } from 'semantic-ui-react'
+import { Grid, Header, Segment, Card, Button, Icon, Image, Message, Transition } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom'
 import { AuthContext } from '../../../../auth/AuthContext'
 //Funcional-consumo API 
@@ -74,19 +74,19 @@ export default class ViewEventos extends Component {
                     this.setState({ historial: result.data, waitinghistorial: false })
                 },
                 (error) => {
-                    console.log('No se ha podido obtener info :(')
                     this.setState({ fetcherrorH: true, waitinghistorial: false, historial: [] })
                 }
             )
+            .catch((error) => {
+                this.setState({ fetcherrorH: true, waitinghistorial: false, historial: [] })
+            })
+
     }
-
-
-
 
     render() {
         const { eventos, waitingeventos, historial, waitinghistorial, fetcherrorE, fetcherrorH } = this.state
 
-        const recomendaciones = ['No recargues la página completa :) intenta con el botón azul que está arriba a la derecha ', 'Si esta falla persiste comunica este problema a sistemas']
+        const recomendaciones = ['No recargues la página completa :) intenta con el botón azul que está arriba a la derecha ', 'Si esta falla persiste comunica este problema']
         return (
             <>
                 <Button icon loading={waitingeventos} color='blue' floated='right' onClick={this.fetchActivos}>
@@ -118,45 +118,41 @@ export default class ViewEventos extends Component {
                                 _.times(5, (i) =>
                                     <CardPlaceholder key={i} />
                                 )
-                                : fetcherrorE ?
+                                : eventos.length === 0 && !fetcherrorE ?
                                     <>
-                                        <Image src={redcross} size='small' floated='right' style={{ zIndex: '20' }} />
-                                        <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
+                                        <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
+                                        <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
                                     </>
-                                    : eventos.length === 0 ?
-                                        <>
-                                            <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
-                                            <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
-                                        </>
-                                        : <Events eventos={eventos} />
+                                    : <Events eventos={eventos} />
 
                             }
                         </Card.Group>
-                        {/*fetcherrorE &&
+                        {fetcherrorE ?
                             <>
-                                <Image src={redcross} size='small' floated='right' style={{ zIndex: '20' }} />
+                                <Image src={redcross} size='small' floated='right' style={{ zIndex: '2', marginTop:'-2vh'}} />
                                 <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
                             </>
-                        }
-
-                        {!fetcherrorE && !waitingeventos && eventos.length === 0 ?
-                            /*NO HAY ERROR DE CONSULTA, 
-                            NO SE ESTÁ ESPERANDO A QUE SE CUMPLA LA CONSULTA,
-                            LA LISTA DE EVENTOS ESTÁ VACÍA
-                            <>
-                                <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
-                                <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
-                            </>
                             : <></>
-                        */}
+                        }                        
                     </Segment>
 
-
-                    <Header as='h5' style={{ color: '#c9a915' }}>
-                        Hay {eventos.length} eventos activos
-                    </Header>
-
+                    <Transition.Group>
+                    {eventos.length > 0 ?
+                        <Header as='h5' style={{ color: '#c9a915' }}>
+                            Hay {eventos.length} eventos activos
+                        </Header>
+                        : waitingeventos ?
+                            <Header as='h5' style={{ color: '#c9a915' }}>
+                                Recibiendo datos...
+                            </Header>
+                            : eventos.length === 0 &&
+                                <Header as='h5' style={{ color: '#c9a915' }}>
+                                    No hay eventos activos
+                                </Header>
+                    }
+                    </Transition.Group>
                 </Grid.Row>
+
                 <Grid.Row style={{ marginTop: '1rem' }}>
                     <Header as='h2' color='grey' dividing content='Historial de eventos' subheader='Eventos que sucedieron con anterioridad' icon='history' />
                     <Segment loading={waitinghistorial} basic style={{
@@ -164,40 +160,20 @@ export default class ViewEventos extends Component {
                         height: 238
                     }}>
                         {waitinghistorial ?
-                                <>Esperando historial</>
-                                : fetcherrorH ?
+                            <>Esperando historial</>
+                            : fetcherrorH ?
+                                <>
+                                    <Image src={redcross} size='small' floated='right' style={{ zIndex: '20' }} />
+                                    <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
+                                </>
+                                : historial.length === 0 ?
                                     <>
-                                        <Image src={redcross} size='small' floated='right' style={{ zIndex: '20' }} />
-                                        <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
+                                        <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
+                                        <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
                                     </>
-                                    : historial.length === 0 ?
-                                        <>
-                                            <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
-                                            <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
-                                        </>
-                                        : <>Aquí está el historial</>
+                                    : <>Aquí está el historial</>
 
-                        }
-                        {/*fetcherrorH &&
-                            <>
-                                <Image src={redcross} size='small' floated='right' style={{ zIndex: '20' }} />
-                                <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
-                            </>
-                        }
-                        {waitinghistorial ?
-                            <>Esperando historial...</>
-                            : <>Aqui está el historial</>
-                        }
-                        {!fetcherrorE && !waitinghistorial && historial.length === 0 ?
-                            /*NO HAY ERROR DE CONSULTA, 
-                            NO SE ESTÁ ESPERANDO A QUE SE CUMPLA LA CONSULTA,
-                            LA LISTA DE HISTORIAL ESTÁ VACÍA
-                            <>
-                                <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
-                                <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
-                            </>
-                            : <></>
-                        */}
+                        }                        
                     </Segment>
 
                 </Grid.Row>

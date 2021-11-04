@@ -1,35 +1,49 @@
 import { Component } from 'react'
-import { Button, Header, Modal, Icon, Form, Card, Segment } from 'semantic-ui-react'
 import { AuthContext } from '../../../../../auth/AuthContext'
-
+import { Button, Header, Modal, Icon, Form, Card, Segment, Message, Transition } from 'semantic-ui-react'
+import Axios from 'axios'
 
 const iconos = [
-    { key: 'aje', text: 'Ajedréz', value: 'chess', icon: 'chess' },
+    { key: 'acc', text: 'Access', value: 'wheelchair', icon: 'wheelchair' },
+    { key: 'aje', text: 'Ajedrez', value: 'chess', icon: 'chess' },
     { key: 'alt', text: 'Altavoz', value: 'bullhorn', icon: 'bullhorn' },
+    { key: 'arb', text: 'Árbol', value: 'tree', icon: 'tree' },
+    { key: 'arr', text: 'Arroba', value: 'at', icon: 'at' },
+    { key: 'avi', text: 'Avión', value: 'plane', icon: 'plane' },
     { key: 'bal', text: 'Balanza', value: 'balance scale', icon: 'balance scale' },
+    { key: 'bao', text: 'Balón', value: 'futbol', icon: 'futbol' },
     { key: 'bir', text: 'Birrete', value: 'graduation cap', icon: 'graduation cap' },
+    { key: 'bol', text: 'Bolso', value: 'shopping bag', icon: 'shopping bag' },
+    { key: 'bom', text: 'Bombilla', value: 'lightbulb', icon: 'lightbulb' },
     { key: 'caj', text: 'Cajas', value: 'boxes', icon: 'boxes' },
-    { key: 'cer', text: 'Sello', value: 'certificate', icon: 'certificate' },
-    { key: 'cha', text: 'Gráfica', value: 'chart line', icon: 'chart line' },
-    { key: 'clo', text: 'Reloj', value: 'clock', icon: 'clock' },
+    { key: 'coh', text: 'Cohete', value: 'rocket', icon: 'rocket' },
+    { key: 'cub', text: 'Cubiertos', value: 'food', icon: 'food' },
     { key: 'dol', text: 'Dolar', value: 'dollar sign', icon: 'dollar sign' },
     { key: 'edi', text: 'Edificio', value: 'building', icon: 'building' },
+    { key: 'eng', text: 'Engranajes', value: 'cogs', icon: 'cogs' },
     { key: 'esc', text: 'Escudo', value: 'shield alternate', icon: 'shield alternate' },
     { key: 'eti', text: 'Etiquetas', value: 'tags', icon: 'tags' },
     { key: 'ext', text: 'Extintor', value: 'fire extinguisher', icon: 'fire extinguisher' },
     { key: 'fil', text: 'Film', value: 'film', icon: 'film' },
     { key: 'fol', text: 'Folder', value: 'folder', icon: 'folder' },
     { key: 'glo', text: 'Globo', value: 'globe', icon: 'globe' },
+    { key: 'cha', text: 'Gráfica', value: 'chart line', icon: 'chart line' },
+    { key: 'hue', text: 'Huella', value: 'paw', icon: 'paw' },
     { key: 'ind', text: 'Industria', value: 'industry', icon: 'industry' },
     { key: 'lat', text: 'Latido', value: 'heartbeat', icon: 'heartbeat' },
     { key: 'lib', text: 'Libro', value: 'book', icon: 'book' },
+    { key: 'lis', text: 'Lista', value: 'clipboard list', icon: 'clipboard list' },
+    { key: 'mat', text: 'Matraz', value: 'flask', icon: 'flask' },
     { key: 'mic', text: 'Microchip', value: 'microchip', icon: 'microchip' },
-    { key: 'por', text: 'Portafolio', value: 'suitcase', icon: 'suitcase' },
+    { key: 'pil', text: 'Píldoras', value: 'pills', icon: 'pills' },
     { key: 'pod', text: 'Podcast', value: 'podcast', icon: 'podcast' },
-    { key: 'pri', text: 'Privado', value: 'user secret', icon: 'user secret' },
+    { key: 'por', text: 'Portafolio', value: 'suitcase', icon: 'suitcase' },
     { key: 'pro', text: 'Programa', value: 'file code', icon: 'file code' },
+    { key: 'pri', text: 'Privado', value: 'user secret', icon: 'user secret' },
     { key: 'rec', text: 'Reciclado', value: 'recycle', icon: 'recycle' },
-    { key: 'vid', text: 'Videojuego', value: 'gamepad', icon: 'gamepad' },
+    { key: 'rel', text: 'Reloj', value: 'clock', icon: 'clock' },
+    { key: 'sel', text: 'Sello', value: 'certificate', icon: 'certificate' },
+    { key: 'vid', text: 'Videojuego', value: 'gamepad', icon: 'gamepad' }
 ]
 
 const colors = [
@@ -54,47 +68,171 @@ export default class CategoriasModalForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            //Para definir los estados de envío            
+            sendingdata: false, //enviando
+            errorsending: false, //error al enviar
+            duplicated: false,
+            successending: false, //enviado correctamente
+
+            //estado del modal
             open: false,
+
+            //campos
             nombre: '',
             descripcion: '',
             color: 'grey',
-            icon: ''
+            icon: 'help'
         }
 
+        //Cambios de estado y texto
         this.handleChange = this.handleChange.bind(this)
-        this.selectChange = this.selectChange.bind(this)
-        this.iconChange = this.iconChange.bind(this)
+        this.hanldeSubmit = this.hanldeSubmit.bind(this)
+        this.fieldsAreComplete = this.fieldsAreComplete.bind(this)
+        //this.Capitalize = this.Capitalize.bind(this)
+        
+
+        //Para salir o entrar
         this.exit = this.exit.bind(this)
         this.open = this.open.bind(this)
+
     }
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
-        console.log(this.state.color)
+        this.setState({
+            [name]: value,
+            successending: false,
+            errorsending: false,
+            duplicated: false
+        });
     }
 
-    selectChange = (e, { value }) => this.setState({ color: value })
-    iconChange = (e, { value }) => this.setState({ icon: value })
+    /*Capitalize(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }*/
+
+    selectChange = (e, { name, value }) => this.setState({ [name]: value })
+    //iconChange = (e, { value }) => this.setState({ icon: value })
 
     open() {
         this.setState({ open: true })
     }
 
     exit() {
-        this.setState({ open: false })
+        this.setState({
+            open: false,
+
+            //RESET ALL STATES
+            //enviando datos
+            sendingdata: false,
+            //error al enviar
+            errorsending: false,
+            //ya existe una categoría con este nombre
+            duplicated: false,
+            //envío exitoso
+            successending: false,
+
+            //clear fields
+            nombre: '',
+            descripcion: '',
+            color: 'grey',
+            icon: 'at'
+        })
+
+        this.props.parentCallback('cancelled')
+    }
+
+    fieldsAreComplete() {
+        const { nombre, descripcion, color, icon } = this.state
+        if (nombre.length > 0 && descripcion.length > 0 && color.length > 0 && icon.length > 0) {
+            return false
+        }
+        else { return true }
+    }
+
+    async hanldeSubmit() {
+        this.setState({ sendingdata: true })
+        const {
+            nombre,
+            descripcion,
+            color,
+            icon,
+        } = this.state
+        const { user } = this.context
+        await Axios.post('http://localhost:5000/objects/categoria', {
+            nombre: nombre,
+            descripcion: descripcion,
+            color: color,
+            icon: icon,
+            creador: user.id
+        },
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + user.token
+                }
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        sendingdata: false,
+                        errorsending: false,
+                        successending: true
+                    })
+                    setTimeout(() => {
+                        this.props.parentCallback('reload')
+                        this.setState({open: false})
+                      }, 2000)
+                    
+                },
+                (error) => {
+                    //409 ya existe alguno en BD
+                    //401 no autorizado
+                    //400 bad request
+                    if (error.response.status === 409) {
+                        this.setState({
+                            sendingdata: false,
+                            errorsending: false,
+                            successending: false,
+                            duplicated: true
+                        })
+                    }
+
+                }
+            )
+            .catch((error) => {
+                //error al enviar data, no se pudo comunicar con el servidor
+                this.setState({
+                    sendingdata: false,
+                    errorsending: true,
+                    duplicated: false,
+                    successending: false
+                })
+            })
     }
 
     render() {
-        const { open, color, icon, nombre, descripcion } = this.state
+        const {
+            open,
+
+            color,
+            icon,
+            nombre,
+            descripcion,
+            
+            sendingdata,
+            errorsending,
+            duplicated,
+            successending
+
+        } = this.state
         const { disabled } = this.props
         return (
             <Modal
                 open={open}
-                style={{width:'50vw'}}
+                style={{ width: '50vw' }}
                 trigger={
                     <Button
-                        animated
+                        animated='fade'
                         style={{
                             backgroundColor: "#a95168",
                             color: "#ffffff",
@@ -120,15 +258,17 @@ export default class CategoriasModalForm extends Component {
                         <Header color='grey'>Por favor llene los siguientes campos:</Header>
                     </Modal.Description>
 
-                    <Segment basic style={{position:'fixed',top:'20vh', left:'30vw'}}>
-                        <Header color='grey' content='Vista previa'/>
+
+
+                    <Segment basic style={{ position: 'fixed', top: '20vh', left: '30vw' }}>
+                        <Header color='grey' content='Vista previa' />
                         <Card color={color}>
                             <Card.Content>
                                 <Card.Header>
-                                <Icon name={icon} color={color} />
+                                    <Icon name={icon} color={color} />
                                     {nombre}
                                 </Card.Header>
-                                <Card.Description>                                    
+                                <Card.Description>
                                     {descripcion}
                                 </Card.Description>
 
@@ -143,22 +283,22 @@ export default class CategoriasModalForm extends Component {
                             value={nombre}
                             name='nombre'
                             onChange={this.handleChange}
-                            label='Nombre de la categoría'
-                            placeholder='Ej. Tecnología, Salud, Financieros'                            
+                            label='Define un nombre para la categoría'
+                            placeholder='Ej. Tecnología, Salud, Financieros, Deportes ...'
                         />
 
                         <Form.TextArea
                             value={descripcion}
                             name='descripcion'
                             onChange={this.handleChange}
-                            label='Descripción'
-                            placeholder='Ej. Categoría para eventos relacionados con ...'
+                            label = '¿Qué tipo de eventos formarían parte?'
+                            placeholder = 'Escribe aquí los tipos de eventos que pueden formar parte de esta categoría Ej. Categoría para eventos relacionados con Investigación, Avances tecnológicos y Estudios'
                         />
 
                         <Form.Group>
                             <Form.Select
                                 fluid
-                                label='Color'
+                                label='Usa un color para resaltar'
                                 name='color'
                                 value={color}
                                 options={colors}
@@ -168,20 +308,41 @@ export default class CategoriasModalForm extends Component {
                             />
 
                             <Form.Select
-                                icon
                                 fluid
-                                label='Icono'
+                                label='Dale un ícono'
                                 name='icon'
                                 value={icon}
                                 options={iconos}
-                                onChange={this.iconChange}
+                                onChange={this.selectChange}
                                 placeholder='Elige alguno:'
                                 color={color}
                                 width='10'
                             />
                         </Form.Group>
-
                     </Form>
+                    <Transition.Group>
+                        {successending &&
+                            <Message
+                                success
+                                header='Se creó exitosamente'
+                                content='Ya se puede utilizar esta categoría para agrupar eventos'
+                            />
+                        }
+                        {errorsending &&
+                            <Message
+                                error
+                                header='No se pudo crear la categoría :('
+                                content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
+                            />
+                        }
+                        {duplicated &&
+                            <Message
+                                warning
+                                header='Ya existe una categoría con este mismo nombre'
+                                content='Los registros duplicados generan conlictos, modifique el nombre o utilice la categoría que ya existe'
+                            />
+                        }
+                    </Transition.Group>                    
                 </Modal.Content>
                 <Modal.Actions>
                     <Button
@@ -193,8 +354,10 @@ export default class CategoriasModalForm extends Component {
                         content="Crear categoría"
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={this.exit}
+                        onClick={this.hanldeSubmit}
                         positive
+                        loading={sendingdata}
+                        disabled={this.fieldsAreComplete()}
                     />
                 </Modal.Actions>
             </Modal>
