@@ -8,7 +8,7 @@ import Axios from 'axios'
 import _ from 'lodash'
 //Elementos-vistas
 import Events from '../components/containers/Events'
-import CardPlaceholder from '../components/objetos/CardPlaceholder'
+import CardPlaceholder from '../components/objetos/placeholders/CardPlaceholder'
 //import EventPlaceholder from './componentes/EventsPlaceholder'
 //import HistoricalPlaceholder from './componentes/HistoricalPlaceholder'
 

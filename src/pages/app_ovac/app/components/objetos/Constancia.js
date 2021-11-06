@@ -8,7 +8,7 @@ const Constancia = ({constancia}) => {
       </List.Content>
       <List.Content>
         <List.Header>{constancia.name}</List.Header>
-        <List.Description>{constancia.dscrptn}</List.Description>
+        <List.Description>{constancia.description}</List.Description>
       </List.Content>
     </List.Item>
   )

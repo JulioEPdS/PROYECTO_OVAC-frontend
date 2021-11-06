@@ -89,7 +89,7 @@ export default class CategoriasModalForm extends Component {
         this.hanldeSubmit = this.hanldeSubmit.bind(this)
         this.fieldsAreComplete = this.fieldsAreComplete.bind(this)
         //this.Capitalize = this.Capitalize.bind(this)
-        
+
 
         //Para salir o entrar
         this.exit = this.exit.bind(this)
@@ -139,7 +139,7 @@ export default class CategoriasModalForm extends Component {
             icon: 'at'
         })
 
-        this.props.parentCallback('cancelled')
+        this.props.parentCallback('reload')
     }
 
     fieldsAreComplete() {
@@ -176,13 +176,19 @@ export default class CategoriasModalForm extends Component {
                     this.setState({
                         sendingdata: false,
                         errorsending: false,
-                        successending: true
+                        successending: true,
+
+                        nombre: '',
+                        descripcion: '',
+                        color: 'grey',
+                        icon: 'help'
+
                     })
                     setTimeout(() => {
                         this.props.parentCallback('reload')
-                        this.setState({open: false})
-                      }, 2000)
-                    
+                        this.setState({ open: false, successending: false })
+                    }, 2000)
+
                 },
                 (error) => {
                     //409 ya existe alguno en BD
@@ -196,6 +202,14 @@ export default class CategoriasModalForm extends Component {
                             duplicated: true
                         })
                     }
+                    else{
+                        this.setState({
+                            sendingdata: false,
+                            errorsending: true,
+                            successending: false,
+                            duplicated: false
+                        })
+                    }
 
                 }
             )
@@ -207,6 +221,10 @@ export default class CategoriasModalForm extends Component {
                     duplicated: false,
                     successending: false
                 })
+                setTimeout(() => {
+                    this.props.parentCallback('reload')
+                    this.setState({ open: false })
+                }, 2000)
             })
     }
 
@@ -218,7 +236,7 @@ export default class CategoriasModalForm extends Component {
             icon,
             nombre,
             descripcion,
-            
+
             sendingdata,
             errorsending,
             duplicated,
@@ -247,12 +265,14 @@ export default class CategoriasModalForm extends Component {
                             Crear nueva <Icon name="th" />
                         </Button.Content>
                         <Button.Content hidden>
-                            Crear <Icon name="add circle" />
+                            Constancia <Icon name="add circle" />
                         </Button.Content>
                     </Button>
                 }
             >
-                <Modal.Header style={{ color: "#a95168" }}>Crear nueva categoría</Modal.Header>
+                <Modal.Header style={{ color: "#a95168" }}>
+                    <Icon name='th'/>    Crear nueva categoría
+                </Modal.Header>
                 <Modal.Content>
                     <Modal.Description style={{ marginBottom: '1rem' }}>
                         <Header color='grey'>Por favor llene los siguientes campos:</Header>
@@ -291,8 +311,8 @@ export default class CategoriasModalForm extends Component {
                             value={descripcion}
                             name='descripcion'
                             onChange={this.handleChange}
-                            label = '¿Qué tipo de eventos formarían parte?'
-                            placeholder = 'Escribe aquí los tipos de eventos que pueden formar parte de esta categoría Ej. Categoría para eventos relacionados con Investigación, Avances tecnológicos y Estudios'
+                            label='¿Qué tipo de eventos formarían parte?'
+                            placeholder='Escribe aquí los tipos de eventos que pueden formar parte de esta categoría Ej. Categoría para eventos relacionados con Investigación, Avances tecnológicos y Estudios'
                         />
 
                         <Form.Group>
@@ -342,7 +362,7 @@ export default class CategoriasModalForm extends Component {
                                 content='Los registros duplicados generan conlictos, modifique el nombre o utilice la categoría que ya existe'
                             />
                         }
-                    </Transition.Group>                    
+                    </Transition.Group>
                 </Modal.Content>
                 <Modal.Actions>
                     <Button

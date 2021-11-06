@@ -28,11 +28,11 @@ export default class ConstanciasModalForm extends Component {
         this.state = {
             open: false,
             nombre: '',
-            tipo: '',
+            tipo: '', //=== const [tipo, setTipo] = useState('')
             descripcion: '',
             base: '',
             image: '',
-            
+
 
             seleccion: [],
 
@@ -47,7 +47,6 @@ export default class ConstanciasModalForm extends Component {
         }
 
         this.handleChange = this.handleChange.bind(this)
-        this.revealInputs = this.revealInputs.bind(this)
         this.dropdownChange = this.dropdownChange.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
         this.exit = this.exit.bind(this)
@@ -56,24 +55,20 @@ export default class ConstanciasModalForm extends Component {
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
-
+        this.setState({ [name]: value });        
     }
 
     handleInputChange(e) {
         this.setState({
             base: e.target.files[0],
         })
-        
+
         if (e.target.files && e.target.files[0]) {
             this.setState({
-              image: URL.createObjectURL(e.target.files[0])
+                image: URL.createObjectURL(e.target.files[0])
             });
         }
     }
-
-
-
 
     open() {
         this.setState({ open: true })
@@ -81,40 +76,38 @@ export default class ConstanciasModalForm extends Component {
 
     exit() {
         this.setState({ open: false })
-        this.props.parentCallback('cancelled')
-        //this.props.parentCallback('reload')
+        //this.props.parentCallback('cancelled')
+        this.props.parentCallback('reload')
     }
 
-    dropdownChange(e, { value }) {
+    dropdownChange(e, { value }) {        
         this.setState({ seleccion: value })
 
-    }
-
-    revealInputs() {
-        const { seleccion } = this.state
-        if (seleccion.length > 0) {
-            let array = seleccion
-            if (array.find(element => element === "value1")) {
-                this.setState({ TATvisible: true })
-            }
-            else {
-                this.setState({ TATvisible: false })
-            }
-            if (array.find(element => element === "value2")) {
-                this.setState({ TDDvisible: true })
-            }
-            else {
-                this.setState({ TDDvisible: false })
-            }
-            if (array.find(element => element === "value4")) {
-                this.setState({ TAEvisible: true })
-            }
-            else {
-                this.setState({ TAEvisible: false })
-            }
+        if (value.find(element => element === 'value1')) {
+            this.setState({ TATvisible: true })
+        }
+        else {
+            this.setState({ TATvisible: false })
         }
 
+        if (value.find(element => element === 'value2')) {
+            this.setState({ TDDvisible: true })
+        }
+        else {
+            this.setState({ TDDvisible: false })
+        }
+
+        if (value.find(element => element === 'value4')) {
+            this.setState({ TAEvisible: true })
+        }
+        else {
+            this.setState({ TAEvisible: false })
+        }
+
+
+
     }
+
 
     render() {
         const { open, color, nombre, descripcion, TATvisible, TDDvisible, TAEvisible, image } = this.state
@@ -122,7 +115,7 @@ export default class ConstanciasModalForm extends Component {
         return (
             <Modal
                 open={open}
-                style={{ width: '50vw', marginLeft:'-20vw' }}
+                style={{ width: '50vw', marginLeft: '-20vw' }}
                 trigger={
                     <Button
                         animated='fade'
@@ -135,7 +128,7 @@ export default class ConstanciasModalForm extends Component {
                             Crear nueva <Icon name="file alternate" />
                         </Button.Content>
                         <Button.Content hidden>
-                            Crear <Icon name="add circle" />
+                            Constancia <Icon name="add circle" />
                         </Button.Content>
                     </Button>
                 }
@@ -146,12 +139,11 @@ export default class ConstanciasModalForm extends Component {
                 </Modal.Header>
                 <Modal.Content>
 
-                    <Image size='medium' src={image} alt='Esperando base...' style={{position:'fixed', left:'55vw', top:'20vh'}}/>
-
                     <Modal.Description style={{ marginBottom: '1rem' }}>
                         <Header color='grey'>Por favor llene los siguientes campos:</Header>
                     </Modal.Description>
 
+                    <Image size='medium' src={image} alt='Esperando base...' style={{ position: 'fixed', left: '55vw', top: '20vh' }} />
                     <Form>
                         <Form.Input
                             fluid
@@ -178,28 +170,24 @@ export default class ConstanciasModalForm extends Component {
                                 name='tipo'
                                 value={color}
                                 options={tipos}
-                                onChange={this.selectChange}
+                                onChange={this.handleChange}
                                 placeholder='Elige alguno:'
                             />
-                            <Header size='tiny' floated='right'>Formato del documento
-                                <input style={{ backgroundColor: '' }} id="base" type="file" onChange={this.handleInputChange}/>
+                            <Header size='tiny' floated='right'>Formato base del documento (imágen)
+                                <input style={{ backgroundColor: '' }} id="base" type="file" onChange={this.handleInputChange} />
                             </Header>
                         </Form.Group>
 
-                        <Form.Group>
-                            <Form.Dropdown
-                                placeholder='Seleccione texto a imprimir...'
-                                fluid
-                                multiple
-                                selection
-                                options={datosAutomatizados}
-                                onChange={this.dropdownChange}
-                                width='14'
-                                label='Seleccione qué inforación debe imprimirse automáticamente'
-                            />
-                            <Button color='teal' icon='checkmark'/>
-                        </Form.Group>
 
+                        <Form.Dropdown
+                            placeholder='Seleccione texto a imprimir...'
+                            fluid
+                            multiple
+                            selection
+                            options={datosAutomatizados}
+                            onChange={this.dropdownChange}
+                            label='Seleccione qué información debe imprimirse automáticamente'
+                        />
 
                         {TATvisible &&
                             <Form.Input
@@ -219,7 +207,6 @@ export default class ConstanciasModalForm extends Component {
                                 name='TAE'
                             />
                         }
-
 
                     </Form>
                 </Modal.Content>
