@@ -31,7 +31,7 @@ export default class Ponentes extends Component {
                 </Header>
                 <Segment basic style={{ overflow: "auto", maxHeight: 150, height: 150, minHeight: 90 }}>
                     <List animated divided size="small">
-                        {ponentes}
+                        {/*ponentes*/}
                     </List>
                     <Transition.Group animation='fade'>
                         {

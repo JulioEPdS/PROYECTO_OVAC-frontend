@@ -72,13 +72,13 @@ export default class EmpresasModalForm extends Component {
 
                                 <Form.Input
                                     label='Razón social'
-                                    placeholder='Razón'
+                                    placeholder='Agencia de Viajes Chiapas'
                                 />
                             </Form.Group>
 
                             <Form.Input
                                 label='Giro de la empresa'
-                                placeholder='Hotelería, '
+                                placeholder='Agencia de viajes'
                             />
 
                             <Form.Input
@@ -95,7 +95,7 @@ export default class EmpresasModalForm extends Component {
 
                                 <Form.Input
                                     label='Folio de atención'
-                                    placeholder=''
+                                    placeholder='DEIC/DE/26/2021'
                                 />
                             </Form.Group>
                         </Form>

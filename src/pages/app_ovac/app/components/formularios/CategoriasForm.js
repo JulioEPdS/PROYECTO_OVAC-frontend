@@ -97,7 +97,7 @@ export default class CategoriasModalForm extends Component {
 
     }
 
-    handleChange(e) {
+    /*handleChange(e) {
         const { name, value } = e.target;
         this.setState({
             [name]: value,
@@ -105,14 +105,14 @@ export default class CategoriasModalForm extends Component {
             errorsending: false,
             duplicated: false
         });
-    }
-
-    /*Capitalize(str){
-        return str.charAt(0).toUpperCase() + str.slice(1);
     }*/
 
-    selectChange = (e, { name, value }) => this.setState({ [name]: value })
-    //iconChange = (e, { value }) => this.setState({ icon: value })
+    handleChange = (e, { name, value }) => this.setState({
+        [name]: value,
+        successending: false,
+        errorsending: false,
+        duplicated: false
+    })
 
     open() {
         this.setState({ open: true })
@@ -136,7 +136,7 @@ export default class CategoriasModalForm extends Component {
             nombre: '',
             descripcion: '',
             color: 'grey',
-            icon: 'at'
+            icon: 'help'
         })
 
         this.props.parentCallback('reload')
@@ -144,7 +144,10 @@ export default class CategoriasModalForm extends Component {
 
     fieldsAreComplete() {
         const { nombre, descripcion, color, icon } = this.state
-        if (nombre.length > 0 && descripcion.length > 0 && color.length > 0 && icon.length > 0) {
+        if (nombre.length > 0
+            && descripcion.length > 0
+            && (color.length > 0 && color !== 'grey')
+            && (icon.length > 0 && icon !== 'help')) {
             return false
         }
         else { return true }
@@ -168,7 +171,7 @@ export default class CategoriasModalForm extends Component {
         },
             {
                 headers: {
-                    'Authorization': 'Bearer ' + user.token
+                    'Authorization': 'Bearer '+user.token
                 }
             })
             .then(
@@ -202,7 +205,7 @@ export default class CategoriasModalForm extends Component {
                             duplicated: true
                         })
                     }
-                    else{
+                    else {
                         this.setState({
                             sendingdata: false,
                             errorsending: true,
@@ -271,7 +274,7 @@ export default class CategoriasModalForm extends Component {
                 }
             >
                 <Modal.Header style={{ color: "#a95168" }}>
-                    <Icon name='th'/>    Crear nueva categoría
+                    <Icon name='th' />    Crear nueva categoría
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description style={{ marginBottom: '1rem' }}>
@@ -322,7 +325,7 @@ export default class CategoriasModalForm extends Component {
                                 name='color'
                                 value={color}
                                 options={colors}
-                                onChange={this.selectChange}
+                                onChange={this.handleChange}
                                 placeholder='Elige alguno:'
                                 width='10'
                             />
@@ -333,7 +336,7 @@ export default class CategoriasModalForm extends Component {
                                 name='icon'
                                 value={icon}
                                 options={iconos}
-                                onChange={this.selectChange}
+                                onChange={this.handleChange}
                                 placeholder='Elige alguno:'
                                 color={color}
                                 width='10'

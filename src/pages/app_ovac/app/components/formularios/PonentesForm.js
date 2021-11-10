@@ -5,8 +5,16 @@ export default class PonentesModalForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            //DEFAULT, NEEDED TO SET MODAL OPEN OR CLOSE IT
             open: false,
-            
+
+            //FIELDS
+            nombre: '',
+            apellido_p:'',
+            apellido_m:'',
+            correo:'',
+
+            //POSIBLE SENDING STATES
             sendingdata: false,
             successending: false,
             errorsending: false,
@@ -14,19 +22,28 @@ export default class PonentesModalForm extends Component {
         }
         this.open = this.open.bind(this)
         this.exit = this.exit.bind(this)
+
+        this.handleChange = this.handleChange.bind(this)
     }
 
-    open(){
-        this.setState({open: true})
+    open() {
+        this.setState({ open: true })
     }
 
-    exit(){
-        this.setState({open: false})
+    exit() {
+        this.setState({ open: false })
         this.props.parentCallback('reload')
     }
 
+    handleChange(e){
+        const {name, value} = e.target
+        this.setState({[name]: value})
+    }
+
     render() {
-        const { open, sendingdata, successending, errorsending, duplicated } = this.state
+        const { open, sendingdata, successending, errorsending, duplicated,
+            nombre, apellido_m, apellido_p, correo
+        } = this.state
         const { disabled } = this.props
         return (
             <Modal
@@ -38,22 +55,22 @@ export default class PonentesModalForm extends Component {
                         floated='right'
                         style={{
                             backgroundColor: "#00c9a9",
-                            color: "#ffffff",                            
+                            color: "#ffffff",
                         }}
                         disabled={disabled}
                         onClick={this.open}
                     >
                         <Button.Content visible>
-                            Registrar nuevo <Icon name="comment"/>
+                            Registrar nuevo <Icon name="comment" />
                         </Button.Content>
                         <Button.Content hidden>
-                            Ponente <Icon name="add circle"/>
+                            Ponente <Icon name="add circle" />
                         </Button.Content>
                     </Button>
                 }
             >
                 <Modal.Header style={{ color: "#00c9a9" }}>
-                    <Icon name='comment'/> Registrar nuevo ponente
+                    <Icon name='comment' /> Registrar nuevo ponente
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description style={{ marginBottom: '1rem' }}>
@@ -61,8 +78,38 @@ export default class PonentesModalForm extends Component {
                     </Modal.Description>
 
                     <Form>
+                        <Form.Group widths='equal'>
+                            <Form.Input
+                                label='Nombre(s) del ponente'
+                                placeholder='Juan José'
+                                name='nombre'
+                                value={nombre}
+                                onChange={this.handleChange}
+                            />
+                            <Form.Input
+                                label='Apellido paterno'
+                                placeholder='Morales'
+                                name='apellido_p'
+                                value={apellido_p}
+                                onChange={this.handleChange}
+                            />
+                            <Form.Input
+                                label='Apellido materno'
+                                placeholder='Armendariz'
+                                name='apellido_m'
+                                value={apellido_m}
+                                onChange={this.handleChange}
+                            />
+                        </Form.Group>
 
-                     
+                        <Form.Input 
+                            label='Correo electrónico (servirá para envíar reconocimiento)'
+                            placeholder='Ej. ponente@dominio.mx'
+                            name='correo'
+                            value={correo}
+                            onChange={this.handleChange}
+                        />
+
                     </Form>
                     <Transition.Group>
                         {successending &&
@@ -98,8 +145,8 @@ export default class PonentesModalForm extends Component {
                         content="Registrar ponente"
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={this.exit}                    
-                        positive                        
+                        onClick={this.exit}
+                        positive
                         loading={sendingdata}
                     />
                 </Modal.Actions>

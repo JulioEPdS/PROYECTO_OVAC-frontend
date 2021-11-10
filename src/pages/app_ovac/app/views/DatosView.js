@@ -199,7 +199,7 @@ export default class Datos extends Component {
                 </Grid>
 
 
-                <Image size='medium' src={chore} alt='Place' style={{ position: 'fixed', left: '-7vw', top: '65vh', zIndex: '-20', opacity: '.6' }} />
+                <Image size='medium' src={chore} alt='Registros' style={{ position: 'fixed', left: '-7vw', top: '65vh', zIndex: '-20', opacity: '.6' }} />
             </>
 
         )

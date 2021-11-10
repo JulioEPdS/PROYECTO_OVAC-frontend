@@ -42,23 +42,24 @@ export default class ViewEventos extends Component {
         //this.setState({ waitinghistorial: false })
     }
 
-    fetchActivos() {
+    async fetchActivos() {
         this.setState({ waitingeventos: true, fetcherrorE: false })
         const { user } = this.context
-        Axios.get('http://localhost:5000/eventos', {
+       await Axios.get('http://localhost:5000/eventos/:id', {
+            params: {id: "N"},
             headers: {
                 'Authorization': 'Bearer ' + user.token
-            }
+            }         
         })
             .then(
                 (result) => {
                     this.setState({ eventos: result.data, waitingeventos: false })
                 },
-                (error) => {
-                    console.log('No se ha podido obtener info :(')
+                (error) => {                    
+                    console.log(error)
                     this.setState({ fetcherrorE: true, waitingeventos: false, eventos: [] })
                 }
-            )
+            )        
     }
 
     fetchHistorial() {
@@ -129,27 +130,27 @@ export default class ViewEventos extends Component {
                         </Card.Group>
                         {fetcherrorE ?
                             <>
-                                <Image src={redcross} size='small' floated='right' style={{ zIndex: '2', marginTop:'-2vh'}} />
+                                <Image src={redcross} size='small' floated='right' style={{ zIndex: '2', marginTop: '-2vh' }} />
                                 <Message error header='Oops.. no se pudo comunicar con el servidor' list={recomendaciones} />
                             </>
                             : <></>
-                        }                        
+                        }
                     </Segment>
 
                     <Transition.Group>
-                    {eventos.length > 0 ?
-                        <Header as='h5' style={{ color: '#c9a915' }}>
-                            Hay {eventos.length} eventos activos
-                        </Header>
-                        : waitingeventos ?
+                        {eventos.length > 0 ?
                             <Header as='h5' style={{ color: '#c9a915' }}>
-                                Recibiendo datos...
+                                Hay {eventos.length} eventos activos
                             </Header>
-                            : eventos.length === 0 &&
+                            : waitingeventos ?
+                                <Header as='h5' style={{ color: '#c9a915' }}>
+                                    Recibiendo datos...
+                                </Header>
+                                : eventos.length === 0 &&
                                 <Header as='h5' style={{ color: '#c9a915' }}>
                                     No hay eventos activos
                                 </Header>
-                    }
+                        }
                     </Transition.Group>
                 </Grid.Row>
 
@@ -173,7 +174,7 @@ export default class ViewEventos extends Component {
                                     </>
                                     : <>Aquí está el historial</>
 
-                        }                        
+                        }
                     </Segment>
 
                 </Grid.Row>

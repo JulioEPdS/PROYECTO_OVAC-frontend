@@ -49,8 +49,8 @@ export default class LoginPage extends Component {
     const {dispatch} = this.context
     const { user, password } = this.state
     Axios.post('http://localhost:5000/usuarios/login', {
-      usuario: user,
-      contraseña: password
+      user: user,
+      password: password
     }).then((res) => {
       if (res.status === 200) {
         dispatch({

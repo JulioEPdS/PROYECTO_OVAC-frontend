@@ -27,22 +27,35 @@ export default class ConstanciasModalForm extends Component {
         super(props)
         this.state = {
             open: false,
+
+            //FIELDS
             nombre: '',
-            tipo: '', //=== const [tipo, setTipo] = useState('')
+            tipo: '', 
             descripcion: '',
             base: '',
-            image: '',
+                        
 
-
+            //MULTI OPTION SELECTION
             seleccion: [],
 
-            TAT: '',
+            //FIRST CONTENT, THEN STATE OF THE FIELD
+            TAT: '',//TEXTO ANTES TITULO
             TATvisible: false,
-            TDD: '',
+
+            TDD: '',//TIPO DE DOCUMENTO
             TDDvisible: false,
-            TAE: '',
+
+            NDP: false,//NOMBRE DE LA PERSONA
+
+            TAE: '',//TEXTO ANTES EVENTO
             TAEvisible: false,
 
+            NDE: false,//NOMBRE DEL EVENTO
+
+            LYF: false,//LUGAR Y FECHA
+
+
+            //NEEDED TO CONFIG THE FILE
             config: []
         }
 
@@ -51,23 +64,6 @@ export default class ConstanciasModalForm extends Component {
         this.handleInputChange = this.handleInputChange.bind(this)
         this.exit = this.exit.bind(this)
         this.open = this.open.bind(this)
-    }
-
-    handleChange(e) {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });        
-    }
-
-    handleInputChange(e) {
-        this.setState({
-            base: e.target.files[0],
-        })
-
-        if (e.target.files && e.target.files[0]) {
-            this.setState({
-                image: URL.createObjectURL(e.target.files[0])
-            });
-        }
     }
 
     open() {
@@ -79,6 +75,21 @@ export default class ConstanciasModalForm extends Component {
         //this.props.parentCallback('cancelled')
         this.props.parentCallback('reload')
     }
+
+    handleChange = (e, { name, value }) => {this.setState({ [name]: value })}
+
+    handleInputChange(e) {
+        this.setState({
+            base: e.target.files[0],
+        })
+
+        if (e.target.files && e.target.files[0]) {
+            this.setState({
+                base: URL.createObjectURL(e.target.files[0])
+            });
+        }
+    }
+
 
     dropdownChange(e, { value }) {        
         this.setState({ seleccion: value })
@@ -97,11 +108,32 @@ export default class ConstanciasModalForm extends Component {
             this.setState({ TDDvisible: false })
         }
 
+        if (value.find(element => element === 'value3')) {
+            this.setState({ NDP: true })
+        }
+        else {
+            this.setState({ NDP: false })
+        }
+
         if (value.find(element => element === 'value4')) {
             this.setState({ TAEvisible: true })
         }
         else {
             this.setState({ TAEvisible: false })
+        }
+
+        if (value.find(element => element === 'value5')) {
+            this.setState({ NDE: true })
+        }
+        else {
+            this.setState({ NDE: false })
+        }
+
+        if (value.find(element => element === 'value6')) {
+            this.setState({ LYF: true })
+        }
+        else {
+            this.setState({ LYF: false })
         }
 
 
@@ -110,7 +142,17 @@ export default class ConstanciasModalForm extends Component {
 
 
     render() {
-        const { open, color, nombre, descripcion, TATvisible, TDDvisible, TAEvisible, image } = this.state
+        const { open, 
+            tipo, 
+            nombre, 
+            descripcion, 
+            base, 
+
+            //VISIBLE STATES
+            TATvisible, TDDvisible, TAEvisible, 
+            //VALUES AND STATES
+            TAT, TDD, NDP, TAE, NDE, LYF
+        } = this.state
         const { disabled } = this.props
         return (
             <Modal
@@ -143,7 +185,33 @@ export default class ConstanciasModalForm extends Component {
                         <Header color='grey'>Por favor llene los siguientes campos:</Header>
                     </Modal.Description>
 
-                    <Image size='medium' src={image} alt='Esperando base...' style={{ position: 'fixed', left: '55vw', top: '20vh' }} />
+                    <Image size='medium' src={base} alt='Esperando base...' style={{ position: 'fixed', left: '55vw', top: '40vh' }} />
+                    
+                    {
+                        TATvisible && <p style={{ position: 'fixed', left: '63vw', top:'23.5vw', width:'20vw', fontSize:'0.4rem'}}>{TAT}</p>
+                    }
+
+                    {
+                        TDDvisible && <p style={{ position: 'fixed', left: '55vw', top:'43vw', width:'20vw'}}>{TDD}</p>
+                    }
+
+                    {
+                        NDP && <p style={{ position: 'fixed', left: '55vw', top:'45vw', width:'20vw'}}>NOMBRE DE LA PERSONA</p>
+                    }
+                    
+                    {
+                        TAEvisible && <p style={{ position: 'fixed', left: '55vw', top:'47vw', width:'20vw'}}>{TAE}</p>
+                    }
+
+                    {
+                        NDE && <p style={{ position: 'fixed', left: '55vw', top:'49vw', width:'20vw'}}>"NOMBRE DEL EVENTO"</p>
+                    }
+
+                    {
+                        LYF && <p style={{ position: 'fixed', left: '55vw', top:'51vw', width:'20vw'}}>TUXTLA GUTIERREZ, CHIAPAS; 00/00/0000</p>
+                    }
+                    
+                    
                     <Form>
                         <Form.Input
                             fluid
@@ -168,7 +236,7 @@ export default class ConstanciasModalForm extends Component {
                                 width='5'
                                 label='Tipo de documento'
                                 name='tipo'
-                                value={color}
+                                value={tipo}
                                 options={tipos}
                                 onChange={this.handleChange}
                                 placeholder='Elige alguno:'
@@ -183,7 +251,7 @@ export default class ConstanciasModalForm extends Component {
                             placeholder='Seleccione texto a imprimir...'
                             fluid
                             multiple
-                            selection
+                            selection                            
                             options={datosAutomatizados}
                             onChange={this.dropdownChange}
                             label='Seleccione qué información debe imprimirse automáticamente'
@@ -193,18 +261,24 @@ export default class ConstanciasModalForm extends Component {
                             <Form.Input
                                 label='Texto antes del tipo de documento'
                                 name='TAT'
+                                value={TAT}
+                                onChange={this.handleChange}
                             />
                         }
                         {TDDvisible &&
                             <Form.Input
                                 label='Tipo de documento'
                                 name='TDD'
+                                value={TDD}
+                                onChange={this.handleChange}
                             />
                         }
                         {TAEvisible &&
                             <Form.Input
                                 label='Texto antes del nombre del evento'
                                 name='TAE'
+                                value={TAE}
+                                onChange={this.handleChange}
                             />
                         }
 

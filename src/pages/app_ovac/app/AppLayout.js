@@ -45,24 +45,9 @@ export default class HomeLayout extends Component {
         this.props.history.replace('/login')
     }
 
-    /*
-    const {user} = useContext(AuthContext)
-    const history = useHistory()
-        
-    const [state, setState] = useState({activeItem: null})
-    
-    
-    //render() {
-    const { activeItem } = state
-
-    
-    
-    const handleItemClick = (e,{name}) => setState({activeItem: name});            
-
-    */
     render() {
         const { activeItem } = this.state
-        const { user } = this.context
+        const { user } = this.context        
 
         return (<>
 
