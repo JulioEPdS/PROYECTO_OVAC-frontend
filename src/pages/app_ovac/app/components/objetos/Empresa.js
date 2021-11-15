@@ -8,7 +8,9 @@ const Empresa = ({empresa}) =>{
       </List.Content>
       <List.Content>
         <List.Header>{empresa.name}</List.Header>
-        <List.Description>{empresa.id}</List.Description>
+        <List.Description>
+          {empresa.r_social}
+        </List.Description>
       </List.Content>
     </List.Item>
   )

@@ -3,7 +3,15 @@ import { Card, Icon } from "semantic-ui-react"
 export const Categoria = ({categoria}) => {
     return (
         <>
-            <Card style={{height:'80px', width:'250px', marginTop:'1px', overflowY:'hidden'}} color={categoria.color} href={'#'+categoria.id}>
+            <Card 
+                style={{
+                    height:'80px', 
+                    width:'250px', 
+                    marginTop:'1px', 
+                    overflowY:'hidden'
+                }} 
+                color={categoria.color} 
+                href={'#'+categoria.id}>
                 <Card.Content>
                     <Card.Header>
                         <Icon name={categoria.icon} color={categoria.color}/>

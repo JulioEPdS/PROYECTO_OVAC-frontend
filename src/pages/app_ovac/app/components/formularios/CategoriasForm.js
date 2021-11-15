@@ -78,8 +78,8 @@ export default class CategoriasModalForm extends Component {
             open: false,
 
             //campos
-            nombre: '',
-            descripcion: '',
+            name: '',
+            description: '',
             color: 'grey',
             icon: 'help'
         }
@@ -127,14 +127,14 @@ export default class CategoriasModalForm extends Component {
             sendingdata: false,
             //error al enviar
             errorsending: false,
-            //ya existe una categoría con este nombre
+            //ya existe una categoría con este name
             duplicated: false,
             //envío exitoso
             successending: false,
 
             //clear fields
-            nombre: '',
-            descripcion: '',
+            name: '',
+            description: '',
             color: 'grey',
             icon: 'help'
         })
@@ -143,9 +143,9 @@ export default class CategoriasModalForm extends Component {
     }
 
     fieldsAreComplete() {
-        const { nombre, descripcion, color, icon } = this.state
-        if (nombre.length > 0
-            && descripcion.length > 0
+        const { name, description, color, icon } = this.state
+        if (name.length > 0
+            && description.length > 0
             && (color.length > 0 && color !== 'grey')
             && (icon.length > 0 && icon !== 'help')) {
             return false
@@ -156,18 +156,18 @@ export default class CategoriasModalForm extends Component {
     async hanldeSubmit() {
         this.setState({ sendingdata: true })
         const {
-            nombre,
-            descripcion,
+            name,
+            description,
             color,
             icon,
         } = this.state
         const { user } = this.context
         await Axios.post('http://localhost:5000/objects/categoria', {
-            nombre: nombre,
-            descripcion: descripcion,
+            name: name,
+            description: description,
             color: color,
             icon: icon,
-            creador: user.id
+            user_id: user.id
         },
             {
                 headers: {
@@ -181,8 +181,8 @@ export default class CategoriasModalForm extends Component {
                         errorsending: false,
                         successending: true,
 
-                        nombre: '',
-                        descripcion: '',
+                        name: '',
+                        description: '',
                         color: 'grey',
                         icon: 'help'
 
@@ -237,8 +237,8 @@ export default class CategoriasModalForm extends Component {
 
             color,
             icon,
-            nombre,
-            descripcion,
+            name,
+            description,
 
             sendingdata,
             errorsending,
@@ -268,7 +268,7 @@ export default class CategoriasModalForm extends Component {
                             Crear nueva <Icon name="th" />
                         </Button.Content>
                         <Button.Content hidden>
-                            Constancia <Icon name="add circle" />
+                            Categoría <Icon name="add circle" />
                         </Button.Content>
                     </Button>
                 }
@@ -289,10 +289,10 @@ export default class CategoriasModalForm extends Component {
                             <Card.Content>
                                 <Card.Header>
                                     <Icon name={icon} color={color} />
-                                    {nombre}
+                                    {name}
                                 </Card.Header>
                                 <Card.Description>
-                                    {descripcion}
+                                    {description}
                                 </Card.Description>
 
                             </Card.Content>
@@ -303,16 +303,16 @@ export default class CategoriasModalForm extends Component {
 
                         <Form.Input
                             fluid
-                            value={nombre}
-                            name='nombre'
+                            value={name}
+                            name='name'
                             onChange={this.handleChange}
                             label='Define un nombre para la categoría'
                             placeholder='Ej. Tecnología, Salud, Financieros, Deportes ...'
                         />
 
                         <Form.TextArea
-                            value={descripcion}
-                            name='descripcion'
+                            value={description}
+                            name='description'
                             onChange={this.handleChange}
                             label='¿Qué tipo de eventos formarían parte?'
                             placeholder='Escribe aquí los tipos de eventos que pueden formar parte de esta categoría Ej. Categoría para eventos relacionados con Investigación, Avances tecnológicos y Estudios'
