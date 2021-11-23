@@ -1,11 +1,11 @@
 import { Component } from 'react'
 import { Header, Icon, Segment, Breadcrumb, Image, Button, Form, Grid } from 'semantic-ui-react'
-import { AuthContext } from '../../../../auth/AuthContext'
+import { AuthContext } from '../../../../../auth/AuthContext'
 
 //import Axios from 'axios'
 import { NavLink } from 'react-router-dom'
 
-import chore from '../img/chore.svg'
+import chore from '../../img/chore.svg'
 
 export default class DinamicCategoria extends Component {
 

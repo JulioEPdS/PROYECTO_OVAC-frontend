@@ -15,7 +15,7 @@ import Eventos from './views/EventosView'
 import CrearEvento from './views/CreateEvento'
 
 import Anexos from './views/AnexosView'
-import DinamicCategoria from './views/DinamicCategoria'
+import DinamicCategoria from './views/dinamicviews/DinamicCategoria'
 
 
 export default class HomeLayout extends Component {

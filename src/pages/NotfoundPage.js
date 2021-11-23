@@ -1,6 +1,7 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
-import {Grid, Header, Icon} from 'semantic-ui-react'
+import {Button, Grid, Header, Icon} from 'semantic-ui-react'
 
 export default function NotfoundPage() {
     return (
@@ -16,8 +17,10 @@ export default function NotfoundPage() {
                     <Header.Subheader>
                         La página que estás buscando no se ha encontrado
                     </Header.Subheader>
-                    </Header.Content>
+                    </Header.Content>                    
                 </Header>
+
+                <Button content='Volver al LogIn' as={NavLink} to='/login'/>
             </Grid.Column>
 
             

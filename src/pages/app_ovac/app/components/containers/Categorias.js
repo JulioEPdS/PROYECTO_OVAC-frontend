@@ -42,7 +42,17 @@ export default class Categorias extends Component {
                     overflowY: 'hidden',                    
                 }}>
 
-                    <div className='horizontal-grid'>
+                    <div 
+                        //{/*className='horizontal-grid'*/}
+                        style={{display: '-ms-grid',
+                            display: 'grid',
+                        
+                            gap: '1rem',
+                            verticalAlign: 'auto',
+                            
+                            gridTemplateColumns: 'repeat(999, minmax(250px, 1fr))'
+                        }}
+                    >
 
                         {waitingFetch ?
                             //Esperando la consulta

@@ -20,7 +20,7 @@ import Formularios from "../components/containers/Formularios";
 import chore from '../img/chore.svg'
 
 //CSS necesario
-import './customcss.css'
+//import './customcss.css'
 
 import { AuthContext } from "../../../../auth/AuthContext";
 import Ponentes from "../components/containers/Ponentes";
