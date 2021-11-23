@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { AuthContext } from '../../../../../auth/AuthContext'
 import { Button, Header, Modal, Icon, Form, Card, Segment, Message, Transition } from 'semantic-ui-react'
 import Axios from 'axios'
+import config from '../../../../../config'
 
 const iconos = [
     { key: 'acc', text: 'Access', value: 'wheelchair', icon: 'wheelchair' },
@@ -154,7 +155,12 @@ export default class CategoriasModalForm extends Component {
     }
 
     async hanldeSubmit() {
-        this.setState({ sendingdata: true })
+        this.setState({
+            sendingdata: true,
+            errorsending: false,
+            successending: false,
+            duplicated: false
+        })
         const {
             name,
             description,
@@ -162,7 +168,7 @@ export default class CategoriasModalForm extends Component {
             icon,
         } = this.state
         const { user } = this.context
-        await Axios.post('http://localhost:5000/objects/categoria', {
+        await Axios.post(config.REACT_APP_apiURL + '/objects/categoria', {
             name: name,
             description: description,
             color: color,
@@ -171,14 +177,13 @@ export default class CategoriasModalForm extends Component {
         },
             {
                 headers: {
-                    'Authorization': 'Bearer '+user.token
+                    'Authorization': 'Bearer ' + user.token
                 }
             })
             .then(
                 (result) => {
                     this.setState({
-                        sendingdata: false,
-                        errorsending: false,
+                        sendingdata: false,                        
                         successending: true,
 
                         name: '',
@@ -198,19 +203,14 @@ export default class CategoriasModalForm extends Component {
                     //401 no autorizado
                     //400 bad request
                     if (error.response.status === 409) {
-                        this.setState({
-                            sendingdata: false,
-                            errorsending: false,
-                            successending: false,
+                        this.setState({                                                        
                             duplicated: true
                         })
                     }
                     else {
                         this.setState({
                             sendingdata: false,
-                            errorsending: true,
-                            successending: false,
-                            duplicated: false
+                            errorsending: true,                                                        
                         })
                     }
 
@@ -220,9 +220,7 @@ export default class CategoriasModalForm extends Component {
                 //error al enviar data, no se pudo comunicar con el servidor
                 this.setState({
                     sendingdata: false,
-                    errorsending: true,
-                    duplicated: false,
-                    successending: false
+                    errorsending: true
                 })
                 setTimeout(() => {
                     this.props.parentCallback('reload')

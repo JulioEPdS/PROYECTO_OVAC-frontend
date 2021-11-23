@@ -15,6 +15,7 @@ import Eventos from './views/EventosView'
 import CrearEvento from './views/CreateEvento'
 
 import Anexos from './views/AnexosView'
+import DinamicCategoria from './views/DinamicCategoria'
 
 
 export default class HomeLayout extends Component {
@@ -129,6 +130,7 @@ export default class HomeLayout extends Component {
                     <Switch>
                         <Route exact path='/ovac/inicio' component={Inicio} />
                         <Route exact path='/ovac/datos' component={Datos} />
+                        <Route exact path='/ovac/datos/categoria/:id' component={DinamicCategoria}/>
 
                         <Route exact path='/ovac/eventos' component={Eventos} />
                         <Route exact path='/ovac/eventos/crear' component={CrearEvento}/>

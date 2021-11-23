@@ -1,6 +1,9 @@
 import { Component } from "react";
 import { Segment, Header, List, Transition, Icon, Message } from "semantic-ui-react";
+
+import Ponente from "../objetos/Ponente";
 import PonentesModalForm from "../formularios/PonentesForm";
+
 
 
 export default class Ponentes extends Component {
@@ -31,7 +34,12 @@ export default class Ponentes extends Component {
                 </Header>
                 <Segment basic style={{ overflow: "auto", maxHeight: 150, height: 150, minHeight: 90 }}>
                     <List animated divided size="small">
-                        {/*ponentes*/}
+                        {ponentes &&
+                            ponentes.map?.(
+                                (ponente)=>(<Ponente key={ponente.id} ponente={ponente}/>)
+                            )
+
+                        }
                     </List>
                     <Transition.Group animation='fade'>
                         {

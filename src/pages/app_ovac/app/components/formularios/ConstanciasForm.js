@@ -3,15 +3,15 @@ import { Button, Header, Modal, Icon, Form, Image } from 'semantic-ui-react'
 import { AuthContext } from '../../../../../auth/AuthContext'
 
 const tipos = [
-    { key: 'cons', text: 'Constancia', value: 'Constancia' },
-    { key: 'reco', text: 'Reconocimiento', value: 'Reconocimiento' },
-    { key: 'cert', text: 'Certificado', value: 'Certificado' },
-    { key: 'dipl', text: 'Diploma', value: 'Diploma' },
-    { key: 'otro', text: 'Otro', value: 'Otro' }
+    { key: 'cons', text: 'Constancia', value: 'CONSTANCIA' },
+    { key: 'reco', text: 'Reconocimiento', value: 'RECONOCIMIENTO' },
+    { key: 'cert', text: 'Certificado', value: 'CERTIFICADO' },
+    { key: 'dipl', text: 'Diploma', value: 'DIPLOMA' },
+    { key: 'otro', text: 'Otro', value: 'OTRO' }
 ]
 
 const datosAutomatizados = [
-    { key: 'tat', text: 'Texto antes del tipo', value: 'value1' },
+    { key: 'tat', text: 'Texto antes del type', value: 'value1' },
     { key: 'tdd', text: 'Tipo de documento', value: 'value2' },
     { key: 'ndp', text: 'Nombre de la persona', value: 'value3' },
     { key: 'tae', text: 'Texto antes del Evento', value: 'value4' },
@@ -29,21 +29,23 @@ export default class ConstanciasModalForm extends Component {
             open: false,
 
             //FIELDS
-            nombre: '',
-            tipo: '', 
-            descripcion: '',
-            base: '',
-                        
+            name: '',
+            type: '',
+            description: '',
+            base: '', //CONTAINS IMAGE
+
 
             //MULTI OPTION SELECTION
-            seleccion: [],
+            selection: [],
 
             //FIRST CONTENT, THEN STATE OF THE FIELD
             TAT: '',//TEXTO ANTES TITULO
             TATvisible: false,
 
             TDD: '',//TIPO DE DOCUMENTO
+            TDDprint: false,
             TDDvisible: false,
+
 
             NDP: false,//NOMBRE DE LA PERSONA
 
@@ -51,17 +53,17 @@ export default class ConstanciasModalForm extends Component {
             TAEvisible: false,
 
             NDE: false,//NOMBRE DEL EVENTO
-
             LYF: false,//LUGAR Y FECHA
 
-
-            //NEEDED TO CONFIG THE FILE
-            config: []
         }
 
         this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.buttonEnabler = this.buttonEnabler.bind(this)
         this.dropdownChange = this.dropdownChange.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
+
+
         this.exit = this.exit.bind(this)
         this.open = this.open.bind(this)
     }
@@ -76,7 +78,27 @@ export default class ConstanciasModalForm extends Component {
         this.props.parentCallback('reload')
     }
 
-    handleChange = (e, { name, value }) => {this.setState({ [name]: value })}
+    handleChange = (e, { name, value }) => {
+        this.setState({ [name]: value })
+
+        if (name === 'type') {
+            const { TDDprint } = this.state
+            if (TDDprint) {
+                if (value === 'OTRO') {
+                    this.setState({ TDDvisible: true, TDD: '' })
+                }
+                else {
+                    this.setState({ TDDvisible: false, TDD: value })
+                }
+            }
+            else {
+                this.setState({ TDD: value })
+            }
+
+        }
+
+
+    }
 
     handleInputChange(e) {
         this.setState({
@@ -91,8 +113,9 @@ export default class ConstanciasModalForm extends Component {
     }
 
 
-    dropdownChange(e, { value }) {        
-        this.setState({ seleccion: value })
+    dropdownChange(e, { value }) {
+        const { type } = this.state
+        this.setState({ selection: value })
 
         if (value.find(element => element === 'value1')) {
             this.setState({ TATvisible: true })
@@ -102,10 +125,16 @@ export default class ConstanciasModalForm extends Component {
         }
 
         if (value.find(element => element === 'value2')) {
-            this.setState({ TDDvisible: true })
+            if (type === 'OTRO') {
+                this.setState({ TDDvisible: true, TDDprint: true })
+            }
+            else {
+                this.setState({ TDDvisible: false, TDDprint: true })
+            }
+
         }
         else {
-            this.setState({ TDDvisible: false })
+            this.setState({ TDDvisible: false, TDDprint: false })
         }
 
         if (value.find(element => element === 'value3')) {
@@ -140,16 +169,116 @@ export default class ConstanciasModalForm extends Component {
 
     }
 
+    buttonEnabler() {
+        const { name, type, description, base, TAT, TATvisible, TDD, TDDvisible, TAE, TAEvisible, selection } = this.state
+        if (name.length > 5 &&
+            type.length > 5 &&
+            description.length > 5 &&
+            base.length > 0 &&
+            selection.length > 0 &&
+            ((TATvisible && TAT.length > 5) || !TATvisible) &&
+            ((TDDvisible && TDD.length > 5) || !TDDvisible) &&
+            ((TAEvisible && TAE.length > 5) || !TAEvisible)
+        ) {
+
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
+    handleSubmit() {
+        //IMPORT THE STATE DATA
+        const { name, type, description, base } = this.state
+
+        const config = this.configConstructor()
+
+        //INITIALIZE THE DATA TO SEND///////////////////////////////////////////////
+        //INITIALIZE FORMDATA///////////////////////////////////////////////////////
+        var bodyFormData = new FormData()
+        bodyFormData.append('name', name)
+        bodyFormData.append('type', type)
+        bodyFormData.append('description', description)
+        bodyFormData.append('base', base)
+        bodyFormData.append('config', config)
+
+        for (var value of bodyFormData.values()) {
+            console.log(value)
+        }
+
+    }
+
+    configConstructor() {
+        const { TAT, TATvisible, TDD, TDDprint, NDP, TAE, TAEvisible, NDE, LYF } = this.state
+
+
+        //ARRAY NEEDED TO CONFIG THE FILE
+        let config = '{'
+
+        //ADD TAT TO CONFIG IF has content
+        if (TATvisible && TAT.length > 0) {
+            //NEED TO ADD INFO TO CONFIG STRING
+            config = config + '"textBeforeType":"true","textBeforeTypeContent":"' + TAT + '"'
+        }
+
+        //ADD TDD TO CONFIG IF has content
+        if (TDDprint && TDD.length > 0) {
+            if (config.length > 2) {
+                config = config + ','
+            }
+            config = config + '"documentType":"true","documentTypeContent":"' + TDD + '"'
+        }
+
+        //ADD NDP TO CONFIG IF true
+        if (NDP) {
+            if (config.length > 2) {
+                config = config + ','
+            }
+            config = config + '"nombrePersona":"true"'
+        }
+
+        //ADD TAE TO CONFIG IF has content
+        if (TAEvisible && TAE.length > 0) {
+            if (config.length > 2) {
+                config = config + ','
+            }
+            config = config + '"textoSecundario": "true","textoSecundarioContent": "' + TAE + '"'
+        }
+
+        //ADD NDE TO CONFIG IF
+        if (NDE) {
+            if (config.length > 2) {
+                config = config + ','
+            }
+            config = config + '"eventName":"true"'
+        }
+
+        //ADD LYF TO CONFIG IF
+        if (LYF) {
+            if (config.length > 2) {
+                config = config + ','
+            }
+            config = config + '"dateAndPlace": "true"'
+
+        }
+
+        config = config + '}'
+
+        return config
+    }
+
 
     render() {
-        const { open, 
-            tipo, 
-            nombre, 
-            descripcion, 
-            base, 
+        const { open,
+            type,
+            name,
+            description,
+            base,
 
             //VISIBLE STATES
-            TATvisible, TDDvisible, TAEvisible, 
+            TATvisible, TDDvisible, TAEvisible,
+            TDDprint,
             //VALUES AND STATES
             TAT, TDD, NDP, TAE, NDE, LYF
         } = this.state
@@ -186,45 +315,45 @@ export default class ConstanciasModalForm extends Component {
                     </Modal.Description>
 
                     <Image size='medium' src={base} alt='Esperando base...' style={{ position: 'fixed', left: '55vw', top: '40vh' }} />
-                    
+
                     {
-                        TATvisible && <p style={{ position: 'fixed', left: '63vw', top:'23.5vw', width:'20vw', fontSize:'0.4rem'}}>{TAT}</p>
+                        TATvisible && <p style={{ position: 'fixed', left: '63vw', top: '23.5vw', width: '20vw', fontSize: '0.4rem' }}>{TAT}</p>
                     }
 
                     {
-                        TDDvisible && <p style={{ position: 'fixed', left: '55vw', top:'43vw', width:'20vw'}}>{TDD}</p>
+                        TDDprint && <p style={{ position: 'fixed', left: '55vw', top: '43vw', width: '20vw' }}>{TDD}</p>
                     }
 
                     {
-                        NDP && <p style={{ position: 'fixed', left: '55vw', top:'45vw', width:'20vw'}}>NOMBRE DE LA PERSONA</p>
-                    }
-                    
-                    {
-                        TAEvisible && <p style={{ position: 'fixed', left: '55vw', top:'47vw', width:'20vw'}}>{TAE}</p>
+                        NDP && <p style={{ position: 'fixed', left: '55vw', top: '45vw', width: '20vw' }}>NOMBRE DE LA PERSONA</p>
                     }
 
                     {
-                        NDE && <p style={{ position: 'fixed', left: '55vw', top:'49vw', width:'20vw'}}>"NOMBRE DEL EVENTO"</p>
+                        TAEvisible && <p style={{ position: 'fixed', left: '55vw', top: '47vw', width: '20vw' }}>{TAE}</p>
                     }
 
                     {
-                        LYF && <p style={{ position: 'fixed', left: '55vw', top:'51vw', width:'20vw'}}>TUXTLA GUTIERREZ, CHIAPAS; 00/00/0000</p>
+                        NDE && <p style={{ position: 'fixed', left: '55vw', top: '49vw', width: '20vw' }}>"NOMBRE DEL EVENTO"</p>
                     }
-                    
-                    
+
+                    {
+                        LYF && <p style={{ position: 'fixed', left: '55vw', top: '51vw', width: '20vw' }}>TUXTLA GUTIERREZ, CHIAPAS; 00/00/0000</p>
+                    }
+
+
                     <Form>
                         <Form.Input
                             fluid
-                            value={nombre}
-                            name='nombre'
+                            value={name}
+                            name='name'
                             onChange={this.handleChange}
                             label='Defina un nombre con el que se diferencie de las demás'
                             placeholder='Ej. Constancia básica banda café derecha'
                         />
 
                         <Form.TextArea
-                            value={descripcion}
-                            name='descripcion'
+                            value={description}
+                            name='description'
                             onChange={this.handleChange}
                             label='Descripción'
                             placeholder='Ej. Categoría para eventos relacionados con ...'
@@ -235,8 +364,8 @@ export default class ConstanciasModalForm extends Component {
                                 fluid
                                 width='5'
                                 label='Tipo de documento'
-                                name='tipo'
-                                value={tipo}
+                                name='type'
+                                value={type}
                                 options={tipos}
                                 onChange={this.handleChange}
                                 placeholder='Elige alguno:'
@@ -251,7 +380,7 @@ export default class ConstanciasModalForm extends Component {
                             placeholder='Seleccione texto a imprimir...'
                             fluid
                             multiple
-                            selection                            
+                            selection
                             options={datosAutomatizados}
                             onChange={this.dropdownChange}
                             label='Seleccione qué información debe imprimirse automáticamente'
@@ -261,6 +390,7 @@ export default class ConstanciasModalForm extends Component {
                             <Form.Input
                                 label='Texto antes del tipo de documento'
                                 name='TAT'
+                                placeholder='Otorga el/la presente/siguiente'
                                 value={TAT}
                                 onChange={this.handleChange}
                             />
@@ -269,6 +399,7 @@ export default class ConstanciasModalForm extends Component {
                             <Form.Input
                                 label='Tipo de documento'
                                 name='TDD'
+                                placeholder='Carta, documento, etc.'
                                 value={TDD}
                                 onChange={this.handleChange}
                             />
@@ -277,6 +408,7 @@ export default class ConstanciasModalForm extends Component {
                             <Form.Input
                                 label='Texto antes del nombre del evento'
                                 name='TAE'
+                                placeholder='Por haber participado en la plática/evento/curso, etc.'
                                 value={TAE}
                                 onChange={this.handleChange}
                             />
@@ -295,7 +427,8 @@ export default class ConstanciasModalForm extends Component {
                         content="Crear constancia"
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={this.exit}
+                        disabled={this.buttonEnabler()}
+                        onClick={this.handleSubmit}
                         positive
                     />
                 </Modal.Actions>

@@ -1,5 +1,6 @@
 import React, { Component} from 'react'
 import Axios from 'axios'
+import config from '../../../config'
 
 import buildings from './img/buildings.svg'
 import avatar from './img/avatar.svg'
@@ -48,7 +49,7 @@ export default class LoginPage extends Component {
     e.preventDefault()        
     const {dispatch} = this.context
     const { user, password } = this.state
-    Axios.post('http://localhost:5000/usuarios/login', {
+    Axios.post(config.REACT_APP_apiURL+'/usuarios/login', {
       user: user,
       password: password
     }).then((res) => {

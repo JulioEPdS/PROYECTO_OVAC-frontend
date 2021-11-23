@@ -4,7 +4,9 @@ const Constancia = ({constancia}) => {
   return (
     <List.Item key={constancia.id}>
       <List.Content floated="right">
-        <Button disabled compact size="mini" icon="pencil" />
+        <Button compact size="mini" icon="pencil" 
+          //as={NavLink} to={'/ovac/datos/constancia/'+constancia.id} implementar vista dinámica
+        />
       </List.Content>
       <List.Content>
         <List.Header>{constancia.name}</List.Header>

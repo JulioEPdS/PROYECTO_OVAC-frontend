@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Grid, Button, Image, Transition } from "semantic-ui-react";
 import Axios from "axios";
+import config from "../../../../config";
 //import _ from 'lodash'
 //import Categorías
 
@@ -64,7 +65,7 @@ export default class Datos extends Component {
     fetchregistros() {
         this.setState({ waitingFetch: true, fetchError: false })
         const { user } = this.context
-        Axios.get('http://localhost:5000/objects/allobjects', {
+        Axios.get(config.REACT_APP_apiURL+'/objects/allobjects', {
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }
@@ -198,8 +199,10 @@ export default class Datos extends Component {
                     </Grid.Row>
                 </Grid>
 
-
+                
                 <Image size='medium' src={chore} alt='Registros' style={{ position: 'fixed', left: '-7vw', top: '65vh', zIndex: '-20', opacity: '.6' }} />
+                
+                
             </>
 
         )

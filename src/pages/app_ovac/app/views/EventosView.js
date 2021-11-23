@@ -4,6 +4,7 @@ import { Grid, Header, Segment, Card, Button, Icon, Image, Message, Transition }
 import { NavLink } from 'react-router-dom'
 import { AuthContext } from '../../../../auth/AuthContext'
 //Funcional-consumo API 
+import config from '../../../../config'
 import Axios from 'axios'
 import _ from 'lodash'
 //Elementos-vistas
@@ -45,27 +46,28 @@ export default class ViewEventos extends Component {
     async fetchActivos() {
         this.setState({ waitingeventos: true, fetcherrorE: false })
         const { user } = this.context
-       await Axios.get('http://localhost:5000/eventos/:id', {
-            params: {id: "N"},
+        await Axios.get(config.REACT_APP_apiURL + '/eventos/:id', {
+            params: { id: "N" },
             headers: {
                 'Authorization': 'Bearer ' + user.token
-            }         
+            }
         })
             .then(
                 (result) => {
                     this.setState({ eventos: result.data, waitingeventos: false })
                 },
-                (error) => {                    
+                (error) => {
                     console.log(error)
                     this.setState({ fetcherrorE: true, waitingeventos: false, eventos: [] })
                 }
-            )        
+            )
     }
 
-    fetchHistorial() {
+    async fetchHistorial() {
         this.setState({ waitingeventos: true, fetcherrorE: false })
         const { user } = this.context
-        Axios.get('http://localhost:5000/eventos', {
+        await Axios.get(config.REACT_APP_apiURL + '/eventos/:id', {
+            params: { id: "N" },
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }

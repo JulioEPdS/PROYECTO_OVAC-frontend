@@ -21,6 +21,8 @@ export default function AppRouter() {
 
                 <Route path='/404' component={NotfoundPage} />
                 
+                {/*ADD PUBLIC ROUTES HERE*/}
+
                 <Route path='*'>
                     <Redirect to='/404'/>
                 </Route>

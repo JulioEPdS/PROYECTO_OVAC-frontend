@@ -1,7 +1,14 @@
 import { Component } from "react";
 import { Modal, Button, Header, Icon, Message, Transition, Form } from "semantic-ui-react";
+import { AuthContext } from '../../../../../auth/AuthContext'
+import Axios from 'axios'
+import config from "../../../../../config";
+
 
 export default class PonentesModalForm extends Component {
+
+    static contextType = AuthContext
+
     constructor(props) {
         super(props)
         this.state = {
@@ -10,9 +17,9 @@ export default class PonentesModalForm extends Component {
 
             //FIELDS
             nombre: '',
-            apellido_p:'',
-            apellido_m:'',
-            correo:'',
+            apellido_p: '',
+            apellido_m: '',
+            email: '',
 
             //POSIBLE SENDING STATES
             sendingdata: false,
@@ -22,6 +29,10 @@ export default class PonentesModalForm extends Component {
         }
         this.open = this.open.bind(this)
         this.exit = this.exit.bind(this)
+
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.fieldsAreComplete = this.fieldsAreComplete.bind(this)
+
 
         this.handleChange = this.handleChange.bind(this)
     }
@@ -35,14 +46,103 @@ export default class PonentesModalForm extends Component {
         this.props.parentCallback('reload')
     }
 
-    handleChange(e){
-        const {name, value} = e.target
-        this.setState({[name]: value})
+    handleChange(e) {
+        const { name, value } = e.target
+        this.setState({ [name]: value })
+    }
+
+    fieldsAreComplete() {
+        const { nombre, apellido_p, apellido_m, email } = this.state
+        if (nombre.length > 2 && apellido_p.length > 2 && apellido_m.length > 2 && email.length > 5) {
+            return false
+        }
+        else { return true }
+    }
+
+    async handleSubmit() {
+        this.setState({
+            sendingdata: true,
+            errorsending: false,
+            successending: false,
+            duplicated: false
+        })
+        const { nombre, apellido_p, apellido_m, email } = this.state
+        const { user } = this.context
+
+        await Axios.post(config.REACT_APP_apiURL + '/objects/ponente', {
+            nombre: nombre,
+            apellido_p: apellido_p,
+            apellido_m: apellido_m,
+            email: email,
+            user_id: user.id
+        }, {
+            headers: {
+                'Authorization': 'Bearer ' + user.token
+            }
+        })
+            .then(
+                (result) => {
+                    this.setState({
+                        sendingdata: false,
+                        successending: true,
+
+                        nombre: '',
+                        apellido_p: '',
+                        apellido_m: '',
+                        email: ''
+
+                    })
+                    setTimeout(() => {
+                        this.props.parentCallback('reload')
+                        this.setState({ open: false, successending: false })
+                    }, 2000)
+                },
+                (error) => {
+                    //409 ya existe alguno en BD
+                    //401 no autorizado
+                    //400 bad request
+                    if (error.response.status === 409) {
+                        this.setState({
+                            duplicated: true
+                        })
+                    }
+                    else {
+                        this.setState({
+                            sendingdata: false,
+                            errorsending: true,
+                        })
+                    }
+
+                }
+            )
+            .catch((error) => {
+                //error al enviar data, no se pudo comunicar con el servidor
+                this.setState({
+                    sendingdata: false,
+                    errorsending: true
+                })
+                setTimeout(() => {
+                    this.props.parentCallback('reload')
+                    this.setState({ open: false })
+                }, 2000)
+            })
+
     }
 
     render() {
-        const { open, sendingdata, successending, errorsending, duplicated,
-            nombre, apellido_m, apellido_p, correo
+        const {
+            //STATES
+            open,
+            sendingdata,
+            successending,
+            errorsending,
+            duplicated,
+
+            //FIELDS
+            nombre,
+            apellido_m,
+            apellido_p,
+            email
         } = this.state
         const { disabled } = this.props
         return (
@@ -102,11 +202,11 @@ export default class PonentesModalForm extends Component {
                             />
                         </Form.Group>
 
-                        <Form.Input 
+                        <Form.Input
                             label='Correo electrónico (servirá para envíar reconocimiento)'
                             placeholder='Ej. ponente@dominio.mx'
-                            name='correo'
-                            value={correo}
+                            name='email'
+                            value={email}
                             onChange={this.handleChange}
                         />
 
@@ -115,22 +215,22 @@ export default class PonentesModalForm extends Component {
                         {successending &&
                             <Message
                                 success
-                                header='Se creó exitosamente'
-                                content='Ya se puede utilizar esta categoría para agrupar eventos'
+                                header='Se registró exitosamente'
+                                content='Ya se puede visualizar al ponente en el sistema'
                             />
                         }
                         {errorsending &&
                             <Message
                                 error
-                                header='No se pudo crear la categoría :('
+                                header='No se pudo registrar al ponente'
                                 content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
                             />
                         }
                         {duplicated &&
                             <Message
                                 warning
-                                header='Ya existe una categoría con este mismo nombre'
-                                content='Los registros duplicados generan conlictos, modifique el nombre o utilice la categoría que ya existe'
+                                header='Ya existe un registro de este ponente'
+                                content='Los registros duplicados generan conlictos, verifique los datos'
                             />
                         }
                     </Transition.Group>
@@ -145,9 +245,10 @@ export default class PonentesModalForm extends Component {
                         content="Registrar ponente"
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={this.exit}
+                        onClick={this.handleSubmit}
                         positive
                         loading={sendingdata}
+                        disabled={this.fieldsAreComplete()}
                     />
                 </Modal.Actions>
             </Modal>

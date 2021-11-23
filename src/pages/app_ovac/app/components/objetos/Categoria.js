@@ -1,4 +1,6 @@
 import { Card, Icon } from "semantic-ui-react"
+import { NavLink } from 'react-router-dom'
+
 
 export const Categoria = ({categoria}) => {
     return (
@@ -11,7 +13,8 @@ export const Categoria = ({categoria}) => {
                     overflowY:'hidden'
                 }} 
                 color={categoria.color} 
-                href={'#'+categoria.id}>
+                as={NavLink} to={'/ovac/datos/categoria/'+categoria.id}
+            >
                 <Card.Content>
                     <Card.Header>
                         <Icon name={categoria.icon} color={categoria.color}/>

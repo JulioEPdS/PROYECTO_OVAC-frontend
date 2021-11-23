@@ -13,14 +13,14 @@ export default class Empresas extends Component {
         this.reloadDataCallBack = this.reloadDataCallBack.bind(this)
     }
 
-    reloadDataCallBack(childData){
-        if(childData === 'reload'){
+    reloadDataCallBack(childData) {
+        if (childData === 'reload') {
             this.props.parentCallback('reload')
         }
     }
 
     render() {
-        const {empresas, fetchError, waitingFetch} = this.props
+        const { empresas, fetchError, waitingFetch } = this.props
         return (
             <Segment>
                 <Header as="h3" style={{ color: "#007a99" }}>
@@ -32,7 +32,7 @@ export default class Empresas extends Component {
                         </Header.Subheader>
                     </Header.Content>
                 </Header>
-                <Segment basic style={{overflow: "auto", maxHeight: 150, height: 150, minHeight: 90}}>
+                <Segment basic style={{ overflow: "auto", maxHeight: 150, height: 150, minHeight: 90 }}>
                     <List animated divided relaxed>
                         {empresas &&
                             empresas.map?.(
@@ -43,15 +43,15 @@ export default class Empresas extends Component {
                     <Transition.Group animation='fade'>
                         {
                             fetchError &&
-                            <Message 
-                                error 
-                                header='No se pudo comunicar con el servidor' 
-                                style={{height:'16vh', textAlign:'center'}}
+                            <Message
+                                error
+                                header='No se pudo comunicar con el servidor'
+                                style={{ height: '16vh', textAlign: 'center' }}
                             />
                         }
                     </Transition.Group>
                 </Segment>
-                <EmpresasModalForm disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack}/>
+                <EmpresasModalForm disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack} />
             </Segment>
         )
     }
