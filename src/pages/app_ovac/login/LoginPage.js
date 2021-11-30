@@ -64,7 +64,7 @@ export default class LoginPage extends Component {
           }
         })
       }
-      this.props.history.replace('/ovac/inicio')
+      this.props.history.replace('/app/inicio')
     }).catch((err) => {
       this.setState({ loginfailed: true, tryingtolog: false })
     })

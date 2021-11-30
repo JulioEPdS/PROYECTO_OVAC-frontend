@@ -47,7 +47,7 @@ export default class DinamicCategoria extends Component {
 
 
                 <Breadcrumb>
-                    <Breadcrumb.Section link as={NavLink} to='/ovac/datos'>Registros</Breadcrumb.Section>
+                    <Breadcrumb.Section link as={NavLink} to='/app/datos'>Registros</Breadcrumb.Section>
                     <Breadcrumb.Divider />
                     <Breadcrumb.Section active>Categoría</Breadcrumb.Section>
                 </Breadcrumb>

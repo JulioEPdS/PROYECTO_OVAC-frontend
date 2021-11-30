@@ -48,7 +48,7 @@ export default class HomeLayout extends Component {
 
     render() {
         const { activeItem } = this.state
-        const { user } = this.context        
+        const { user } = this.context
 
         return (<>
 
@@ -92,51 +92,51 @@ export default class HomeLayout extends Component {
 
 
             <Grid>
-                <Grid.Column style={{ width: '12vw', marginLeft: '1rem', marginTop:'0.5rem'}}>
+                <Grid.Column style={{ width: '12vw', marginLeft: '1rem', marginTop: '0.5rem' }}>
                     <Menu fluid vertical tabular color='brown'>
                         <Menu.Item
                             icon='home'
                             name='inicio'
                             active={activeItem === 'inicio'}
                             onClick={this.handleItemClick}
-                            as={NavLink} to='/ovac/inicio'
+                            as={NavLink} to='/app/inicio'
                         />
                         <Menu.Item
                             icon='calendar'
                             name='eventos'
                             active={activeItem === 'eventos'}
                             onClick={this.handleItemClick}
-                            as={NavLink} to='/ovac/eventos'
+                            as={NavLink} to='/app/eventos'
                         />
                         <Menu.Item
                             icon='edit'
                             name='registros'
                             active={activeItem === 'registros'}
                             onClick={this.handleItemClick}
-                            as={NavLink} to='/ovac/datos'
+                            as={NavLink} to='/app/datos'
                         />
                         <Menu.Item
                             icon='file alternate'
                             name='informes'
                             active={activeItem === 'informes'}
                             onClick={this.handleItemClick}
-                            as={NavLink} to='/ovac/anexos'
+                            as={NavLink} to='/app/anexos'
                         />
                     </Menu>
                 </Grid.Column>
 
-                <Grid.Column style={{ marginTop: '0.5rem', width: '87vw', overflowY:'auto', overflowX:'hidden' , maxHeight:'86vh', minWidth:'24vh'}}>
+                <Grid.Column style={{ marginTop: '0.5rem', width: '87vw', overflowY: 'auto', overflowX: 'hidden', maxHeight: '86vh', minWidth: '24vh' }}>
 
                     <Switch>
-                        <Route exact path='/ovac/inicio' component={Inicio} />
-                        <Route exact path='/ovac/datos' component={Datos} />
-                        <Route exact path='/ovac/datos/categoria/:id' component={DinamicCategoria}/>
+                        <Route exact path='/app/inicio' component={Inicio} />
+                        <Route exact path='/app/datos' component={Datos} />
+                        <Route exact path='/app/datos/categoria/:id' component={DinamicCategoria} />
 
-                        <Route exact path='/ovac/eventos' component={Eventos} />
-                        <Route exact path='/ovac/eventos/crear' component={CrearEvento}/>
+                        <Route exact path='/app/eventos' component={Eventos} />
+                        <Route exact path='/app/eventos/crear' component={CrearEvento} />
 
 
-                        <Route exact path='/ovac/anexos' component={Anexos} />                        
+                        <Route exact path='/app/anexos' component={Anexos} />
                     </Switch>
 
                 </Grid.Column>

@@ -20,7 +20,7 @@ export default function NotfoundPage() {
                     </Header.Content>                    
                 </Header>
 
-                <Button content='Volver al LogIn' as={NavLink} to='/login'/>
+                
             </Grid.Column>
 
             

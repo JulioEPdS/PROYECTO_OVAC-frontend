@@ -13,7 +13,7 @@ export const Categoria = ({categoria}) => {
                     overflowY:'hidden'
                 }} 
                 color={categoria.color} 
-                as={NavLink} to={'/ovac/datos/categoria/'+categoria.id}
+                as={NavLink} to={'/app/datos/categoria/'+categoria.id}
             >
                 <Card.Content>
                     <Card.Header>
