@@ -18,7 +18,7 @@ export default class Formularios extends Component {
     }
 
     render() {
-        const {formularios, fetchError, waitingFetch} = this.props
+        const {fetchError, waitingFetch} = this.props
         return (
             <Segment>
                 <Header as="h3" style={{ color: "#bf5748" }}>

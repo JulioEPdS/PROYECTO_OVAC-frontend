@@ -65,7 +65,7 @@ export default class PublicPage extends Component {
 
                 <Card fluid color='orange'>
                     <Card.Content>
-                        <Card.Header>Consultar datos</Card.Header>
+                        <Card.Header>Datos personales</Card.Header>
                         <Card.Meta>Consulta o actualiza tus datos</Card.Meta>
                         <Card.Description> 
                             Si ya te has inscrito alguna vez a un evento, puedes 

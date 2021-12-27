@@ -44,7 +44,8 @@ export default class Categorias extends Component {
 
                     <div 
                         //{/*className='horizontal-grid'*/}
-                        style={{display: '-ms-grid',
+                        style={{
+                            
                             display: 'grid',
                         
                             gap: '1rem',

@@ -71,8 +71,7 @@ export default class Datos extends Component {
             }
         })
             .then(
-                (result) => {
-                    console.log(result)
+                (result) => {                    
 
                     const categorias = result.data.categorias
                     const constancias = result.data.constancias

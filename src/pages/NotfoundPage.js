@@ -1,7 +1,6 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 
-import {Button, Grid, Header, Icon} from 'semantic-ui-react'
+import {Grid, Header, Icon} from 'semantic-ui-react'
 
 export default function NotfoundPage() {
     return (

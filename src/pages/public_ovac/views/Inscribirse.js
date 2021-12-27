@@ -3,9 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Card, Grid, Header, Icon, Segment, Button, Search } from 'semantic-ui-react'
 
 export default class Inscripciones extends Component {
-    constructor(props) {
-        super(props)
-    }
+    
 
     render() {
 
