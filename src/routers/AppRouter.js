@@ -15,23 +15,23 @@ export default function AppRouter() {
 
     return (
         <Suspense fallback={
-            <div 
+            <div
                 style={{
-                    marginTop:'50vh', 
-                    marginLeft:'auto', 
-                    marginRight:'auto',
-                    width:'50vw',
-                    color:'#2f2e41',
-                    fontSize:'4rem'
+                    marginTop: '50vh',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    width: '50vw',
+                    color: '#2f2e41',
+                    fontSize: '4rem'
                 }}
             >
                 Cargando...
             </div>}>
-        
+
             <Switch>
 
                 <Route exact path='/'>
-                    <Redirect to='/home' />
+                    <Redirect to='/login' />
                 </Route>
 
                 <Route exact path='/login' component={LogIn} />

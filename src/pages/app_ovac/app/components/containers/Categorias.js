@@ -11,14 +11,14 @@ import empty from '../../img/empty.svg'
 
 export default class Categorias extends Component {
     constructor(props) {
-        super(props)        
+        super(props)
         this.reloadDataCallBack = this.reloadDataCallBack.bind(this)
     }
 
     reloadDataCallBack = (childData) => {
         if (childData === 'reload') {
             this.props.parentCallback('reload')
-        }        
+        }
     }
 
     render() {
@@ -39,18 +39,14 @@ export default class Categorias extends Component {
                 <Segment basic style={{
                     height: '130px',
                     overflowX: 'auto',
-                    overflowY: 'hidden',                    
+                    overflowY: 'hidden',
                 }}>
 
-                    <div 
-                        //{/*className='horizontal-grid'*/}
+                    <div
                         style={{
-                            
                             display: 'grid',
-                        
                             gap: '1rem',
                             verticalAlign: 'auto',
-                            
                             gridTemplateColumns: 'repeat(999, minmax(250px, 1fr))'
                         }}
                     >
@@ -63,14 +59,13 @@ export default class Categorias extends Component {
                             : categorias.length === 0 && !fetchError ?
                                 //No hay categorias en base de datos
                                 <>
-                                    <Image src={empty} size='tiny' />
-                                    <Header content='Parece ser que no hay categorías en la base de datos'/>
+                                    <Image src={empty} size='small' floated="right"/>
+                                    <Header content='Parece ser que no hay categorías en la base de datos' style={{ color: '#3F3D56' }} />
                                 </>
-                                //Presentamos los elementos
+                                //Presentamos los elementos porque no hubo error al consultar
                                 : categorias.map?.((categoria) => (
                                     <Categoria key={categoria.id} categoria={categoria} />
-                                )
-                                )
+                                ))
                         }
 
                     </div>
@@ -79,17 +74,17 @@ export default class Categorias extends Component {
                         {fetchError &&
                             //Error en consulta
                             <>
-                                <Image 
+                                <Image
                                     src={redcross}
-                                    size='small' 
-                                    floated='right' 
-                                    style={{ zIndex: '20' }} 
+                                    size='small'
+                                    floated='right'
+                                    style={{ zIndex: '20' }}
                                 />
 
-                                <Message 
-                                    error 
-                                    header='Oops.. no se pudo comunicar con el servidor' 
-                                    list={recomendaciones}                                  
+                                <Message
+                                    error
+                                    header='Oops.. no se pudo comunicar con el servidor'
+                                    list={recomendaciones}
                                 />
                             </>
                         }

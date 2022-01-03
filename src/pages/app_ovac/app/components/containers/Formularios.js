@@ -1,6 +1,12 @@
 import { Component } from "react"
-import {Segment, Header, Icon, List, Transition, Message } from "semantic-ui-react"
+import { Segment, Header, Icon, List, Transition, Message, Image } from "semantic-ui-react"
 import FormulariosModalForm from "../formularios/FormulariosForm"
+
+import ListPlaceholder from "../objetos/placeholders/ListItemPlaceholder"
+
+import _ from 'lodash'
+
+import empty from '../../img/empty.svg'
 
 
 export default class Formularios extends Component {
@@ -11,14 +17,14 @@ export default class Formularios extends Component {
     }
 
 
-    reloadDataCallBack(childData){
-        if(childData === 'reload'){
+    reloadDataCallBack(childData) {
+        if (childData === 'reload') {
             this.props.parentCallback('reload')
         }
     }
 
     render() {
-        const {fetchError, waitingFetch} = this.props
+        const { fetchError, waitingFetch, formularios } = this.props
         return (
             <Segment>
                 <Header as="h3" style={{ color: "#bf5748" }}>
@@ -32,7 +38,20 @@ export default class Formularios extends Component {
                 </Header>
                 <Segment basic style={{ overflow: "auto", maxHeight: 150, height: 150, minHeight: 90 }}>
                     <List animated divided>
-                        {/*formularios*/}
+                        {waitingFetch ?
+                            //Esperando datos
+                            _.times(3, (i) => (
+                                <ListPlaceholder key={i} />
+                            ))
+                            : formularios.length === 0 && !fetchError ?
+                                //No hay formularios en bd
+                                <>
+                                    <Image src={empty} size='tiny' floated="right" />
+                                    <Header content='No se hallaron formularios en la base de datos' style={{ color: '#3F3D56' }} />
+                                </>
+                                //Presentar formularios
+                                : <>Presentar formularios</>
+                        }
                     </List>
                     <Transition.Group animation='fade'>
                         {fetchError &&
@@ -46,7 +65,7 @@ export default class Formularios extends Component {
                 </Segment>
 
 
-               <FormulariosModalForm disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack}/>
+                <FormulariosModalForm disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack} />
 
 
 

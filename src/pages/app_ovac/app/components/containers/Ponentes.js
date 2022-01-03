@@ -1,9 +1,13 @@
 import { Component } from "react";
-import { Segment, Header, List, Transition, Icon, Message } from "semantic-ui-react";
+import { Segment, Header, List, Transition, Icon, Message, Image } from "semantic-ui-react";
 
 import Ponente from "../objetos/Ponente";
 import PonentesModalForm from "../formularios/PonentesForm";
+import ListPlaceholder from "../objetos/placeholders/ListItemPlaceholder";
 
+import _ from 'lodash'
+
+import empty from '../../img/empty.svg'
 
 
 export default class Ponentes extends Component {
@@ -34,12 +38,23 @@ export default class Ponentes extends Component {
                 </Header>
                 <Segment basic style={{ overflow: "auto", maxHeight: 150, height: 150, minHeight: 90 }}>
                     <List animated divided size="small">
-                        {ponentes &&
-                            ponentes.map?.(
-                                (ponente)=>(<Ponente key={ponente.id} ponente={ponente}/>)
-                            )
-
+                        {waitingFetch ?
+                            //Esperando datos
+                            _.times(3, (i) => (
+                                <ListPlaceholder key={i} />
+                            ))
+                            : ponentes.length === 0 && !fetchError ?
+                                //No hay ponentes en la bd
+                                <>
+                                    <Image src={empty} size='tiny' floated="right" />
+                                    <Header content='No se hallaron ponentes en la base de datos' style={{ color: '#3F3D56' }} />
+                                </>
+                                //Presentar la información
+                                : ponentes.map?.(
+                                    (ponente) => (<Ponente key={ponente.id} ponente={ponente} />)
+                                )
                         }
+
                     </List>
                     <Transition.Group animation='fade'>
                         {
@@ -52,9 +67,9 @@ export default class Ponentes extends Component {
                         }
                     </Transition.Group>
                 </Segment>
-                
-                <PonentesModalForm 
-                    disabled={waitingFetch || fetchError} 
+
+                <PonentesModalForm
+                    disabled={waitingFetch || fetchError}
                     parentCallback={this.reloadDataCallback}
                 />
 

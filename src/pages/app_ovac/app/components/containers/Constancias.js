@@ -3,6 +3,8 @@ import { Segment, Header, Icon, Image, List, Transition, Message } from "semanti
 
 import Constancia from "../objetos/Constancia";
 import ConstanciasModalForm from "../formularios/ConstanciasForm";
+import ListPlaceholder from "../objetos/placeholders/ListItemPlaceholder";
+import _ from 'lodash'
 
 import empty from '../../img/empty.svg'
 
@@ -45,11 +47,14 @@ export default class Constancias extends Component {
                     <List animated divided relaxed size="small">
                         {waitingFetch ?
                             //Esperando datos
-                            <></>
+                            _.times(3, (i) => (
+                                <ListPlaceholder key={i} />
+                            ))
                             : constancias.length === 0 && !fetchError ?
                                 //No hay constancias en la base de datos
-                                <>No hay constancias en la base de datos
-                                    <Image src={empty} size='tiny' />
+                                <>                                                                        
+                                    <Image src={empty} size='tiny' floated="right"/>
+                                    <Header content='No se hallaron constancias en la base de datos' style={{ color: '#3F3D56' }} />
                                 </>
                                 //Aquí van las constancias halladas
                                 : constancias.map?.((constancia) => (

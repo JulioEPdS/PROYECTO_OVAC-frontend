@@ -102,7 +102,7 @@ export default class LoginPage extends Component {
               left:'5rem'}}>
               <Header color='grey' as='h2' textAlign='center' icon>
                 <Image src={avatar} />
-                <Header.Content style={{color:'#b09a5b'}}>Acceder a la app</Header.Content>
+                <Header.Content style={{color:'#b09a5b'}}>Bienvenido</Header.Content>
                 <Header.Subheader>Introduzca sus credenciales</Header.Subheader>
               </Header>
               <Form onSubmit={this.handleSubmit}>

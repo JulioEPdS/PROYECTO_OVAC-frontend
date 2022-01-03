@@ -107,7 +107,31 @@ export default class ViewEventos extends Component {
                 />
 
                 <Grid.Row>
-                    <Header as='h2' color='grey' dividing content='Eventos activos' subheader='En espera de ser lanzados y próximos a lanzar' icon='calendar check' />
+                    <Header as='h2' color='grey' dividing content='Eventos en espera' subheader='Eventos con datos pendientes o que no se han lanzado al público' icon='calendar outline' />
+                    <Segment basic style={{
+                        overflowY: 'auto',
+                        height: 238
+                    }}>
+                        <Card.Group itemsPerRow='4'>
+                            {waitingeventos ?
+                                _.times(5, (i) =>
+                                    <CardPlaceholder key={i} />
+                                )
+                                : eventos.length === 0 && !fetcherrorE ?
+                                    <>
+                                        <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
+                                        <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
+                                    </>
+                                    : <Events eventos={eventos} />
+
+                            }
+                        </Card.Group>
+                    </Segment>
+
+                </Grid.Row>
+
+                <Grid.Row style={{ marginTop: '4vh' }}>
+                    <Header as='h2' color='grey' dividing content='Eventos activos' subheader='Eventos próximos a llevarse a cabo' icon='calendar check' />
 
                     <Segment
                         style={{
@@ -156,7 +180,9 @@ export default class ViewEventos extends Component {
                     </Transition.Group>
                 </Grid.Row>
 
-                <Grid.Row style={{ marginTop: '1rem' }}>
+
+
+                <Grid.Row style={{ marginTop: '4vh' }}>
                     <Header as='h2' color='grey' dividing content='Historial de eventos' subheader='Eventos que sucedieron con anterioridad' icon='history' />
                     <Segment loading={waitinghistorial} basic style={{
                         overflowY: 'auto',

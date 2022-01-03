@@ -10,66 +10,7 @@ import { NavLink } from 'react-router-dom'
 import chore from '../../img/chore.svg'
 
 
-const iconos = [
-    { key: 'acc', text: 'Access', value: 'wheelchair', icon: 'wheelchair' },
-    { key: 'aje', text: 'Ajedrez', value: 'chess', icon: 'chess' },
-    { key: 'alt', text: 'Altavoz', value: 'bullhorn', icon: 'bullhorn' },
-    { key: 'arb', text: 'Árbol', value: 'tree', icon: 'tree' },
-    { key: 'arr', text: 'Arroba', value: 'at', icon: 'at' },
-    { key: 'avi', text: 'Avión', value: 'plane', icon: 'plane' },
-    { key: 'bal', text: 'Balanza', value: 'balance scale', icon: 'balance scale' },
-    { key: 'bao', text: 'Balón', value: 'futbol', icon: 'futbol' },
-    { key: 'bir', text: 'Birrete', value: 'graduation cap', icon: 'graduation cap' },
-    { key: 'bol', text: 'Bolso', value: 'shopping bag', icon: 'shopping bag' },
-    { key: 'bom', text: 'Bombilla', value: 'lightbulb', icon: 'lightbulb' },
-    { key: 'caj', text: 'Cajas', value: 'boxes', icon: 'boxes' },
-    { key: 'coh', text: 'Cohete', value: 'rocket', icon: 'rocket' },
-    { key: 'cub', text: 'Cubiertos', value: 'food', icon: 'food' },
-    { key: 'dol', text: 'Dolar', value: 'dollar sign', icon: 'dollar sign' },
-    { key: 'edi', text: 'Edificio', value: 'building', icon: 'building' },
-    { key: 'eng', text: 'Engranajes', value: 'cogs', icon: 'cogs' },
-    { key: 'esc', text: 'Escudo', value: 'shield alternate', icon: 'shield alternate' },
-    { key: 'eti', text: 'Etiquetas', value: 'tags', icon: 'tags' },
-    { key: 'ext', text: 'Extintor', value: 'fire extinguisher', icon: 'fire extinguisher' },
-    { key: 'fil', text: 'Film', value: 'film', icon: 'film' },
-    { key: 'fol', text: 'Folder', value: 'folder', icon: 'folder' },
-    { key: 'glo', text: 'Globo', value: 'globe', icon: 'globe' },
-    { key: 'cha', text: 'Gráfica', value: 'chart line', icon: 'chart line' },
-    { key: 'hue', text: 'Huella', value: 'paw', icon: 'paw' },
-    { key: 'ind', text: 'Industria', value: 'industry', icon: 'industry' },
-    { key: 'lat', text: 'Latido', value: 'heartbeat', icon: 'heartbeat' },
-    { key: 'lib', text: 'Libro', value: 'book', icon: 'book' },
-    { key: 'lis', text: 'Lista', value: 'clipboard list', icon: 'clipboard list' },
-    { key: 'mat', text: 'Matraz', value: 'flask', icon: 'flask' },
-    { key: 'mic', text: 'Microchip', value: 'microchip', icon: 'microchip' },
-    { key: 'pil', text: 'Píldoras', value: 'pills', icon: 'pills' },
-    { key: 'pod', text: 'Podcast', value: 'podcast', icon: 'podcast' },
-    { key: 'por', text: 'Portafolio', value: 'suitcase', icon: 'suitcase' },
-    { key: 'pro', text: 'Programa', value: 'file code', icon: 'file code' },
-    { key: 'pri', text: 'Privado', value: 'user secret', icon: 'user secret' },
-    { key: 'rec', text: 'Reciclado', value: 'recycle', icon: 'recycle' },
-    { key: 'rel', text: 'Reloj', value: 'clock', icon: 'clock' },
-    { key: 'sel', text: 'Sello', value: 'certificate', icon: 'certificate' },
-    { key: 'vid', text: 'Videojuego', value: 'gamepad', icon: 'gamepad' }
-]
-
-const colors = [
-    { key: 'yel', text: 'Amarillo', value: 'yellow' },
-    { key: 'blu', text: 'Azul', value: 'blue' },
-    { key: 'bro', text: 'Café', value: 'brown' },
-    { key: 'pur', text: 'Morado', value: 'purple' },
-    { key: 'ora', text: 'Naranja', value: 'orange' },
-    { key: 'bla', text: 'Obscuro', value: 'black' },
-    { key: 'oli', text: 'Oliva', value: 'olive' },
-    { key: 'pin', text: 'Rosa', value: 'pink' },
-    { key: 'red', text: 'Rojo', value: 'red' },
-    { key: 'tea', text: 'Teal', value: 'teal' },
-    { key: 'gre', text: 'Verde', value: 'green' },
-    { key: 'vio', text: 'Violeta', value: 'violet' }
-]
-
-
-export default class DinamicCategoria extends Component {
+export default class DinamicCertificado extends Component {
 
     //Necesario para extraer token e id
     static contextType = AuthContext
@@ -116,7 +57,7 @@ export default class DinamicCategoria extends Component {
 
     componentDidMount() {
         //FETCH THE INFO
-        this.fetchInfo()
+        //this.fetchInfo()
     }
 
 
@@ -353,31 +294,7 @@ export default class DinamicCategoria extends Component {
                                     </Form.Field>
 
 
-                                    <Form.Group widths='equal'>
-                                        <Form.Field>
-                                            <label>Color de la categoría</label>
-                                            <Form.Select
-                                                disabled={!edit}
-                                                options={colors}
-                                                placeholder='Color'
-                                                name='Color'
-                                                value={Color}
-                                                onChange={this.handleChange}
-                                            />
-                                        </Form.Field>
-                                        <Form.Field>
-                                            <label>Ícono de la categoría</label>
-                                            <Form.Select
-                                                disabled={!edit}
-                                                options={iconos}
-                                                placeholder='Ícono'
-                                                name='Icono'
-                                                value={Icono}
-                                                onChange={this.handleChange}
-
-                                            />
-                                        </Form.Field>
-                                    </Form.Group>
+                                    
 
 
                                     <Button
@@ -417,7 +334,7 @@ export default class DinamicCategoria extends Component {
                                                 {successdisable &&
                                                     <Message
                                                         info
-                                                        header='Se desactivó la categoría exitosamente'
+                                                        header='Se desactivó la categoría exitosamente'                                                        
                                                     />
                                                 }
                                                 {errordisable &&
@@ -475,7 +392,7 @@ export default class DinamicCategoria extends Component {
                             {/*INFERIOR*/}
                             <Grid.Row>
                                 <Segment style={{ height: '22vh' }} loading={waiting}>
-                                    <Header color='grey'>Estadísticas</Header>
+                                    <Header color='grey'>Estadisticas</Header>
                                     <Statistic.Group>
                                         <Statistic>
                                             <Statistic.Value>{Eventos}</Statistic.Value>
@@ -497,14 +414,7 @@ export default class DinamicCategoria extends Component {
 
                 </Grid>
 
-                <Button
-                    style={{ position: 'fixed', bottom: '5vh', right: '3vw' }}
-                    floated='right'
-                    content='Regresar'
-                    icon='left arrow'
-                    labelPosition='left'
-                    as={NavLink} to='/app/datos'
-                />
+                <Button floated='right' as={NavLink} to='/app/datos' content='Regresar' icon='left arrow' labelPosition='left' />
 
                 <Transition.Group>
                     {successending &&

@@ -7,15 +7,26 @@ import { Route, Switch, NavLink } from "react-router-dom"
 import { Menu, Grid, Button, Icon, Header } from 'semantic-ui-react'
 import iwt from './img/iwt.svg'
 
-//Componentes-Vistas
+//Componentes-Vistas Principales Inicio,Eventos, Registros, Informes
 import Inicio from './views/InicioView'
-import Datos from './views/DatosView'
 
-import Eventos from './views/EventosView'
+//VISTAS DE LA SECCIÓN DE INFORMES "alias anexos"//////////////////
+import Anexos from './views/AnexosView'// VIEW PRINCIPAL///////////
+
+
+//VISTAS DE LA SECCIÓN DE EVENTOS//////////////////////////////////
+import Eventos from './views/EventosView' //VIEW PRINCIPAL/////////
 import CrearEvento from './views/CreateEvento'
 
-import Anexos from './views/AnexosView'
+
+//VISTAS DE LA SECCIÓN DE DATOS////////////////////////////////////
+import Datos from './views/DatosView' //VIEW PRINCIPAL/////////////
+//VISTAS DINÁMICAS/////////////////////////////////////////////////
 import DinamicCategoria from './views/dinamicviews/DinamicCategoria'
+import DinamicEmpresa from './views/dinamicviews/DinamicEmpresa'
+import DinamicPonente from './views/dinamicviews/DinamicPonente'
+import DinamicCertificado from './views/dinamicviews/DinamicCertificado'
+import DinamicFormulario from './views/dinamicviews/DinamicFormulario'
 
 
 export default class HomeLayout extends Component {
@@ -129,9 +140,17 @@ export default class HomeLayout extends Component {
 
                     <Switch>
                         <Route exact path='/app/inicio' component={Inicio} />
+
+                        {/*ROUTES PARA LA SECCIÓN DE DATOS*/}
                         <Route exact path='/app/datos' component={Datos} />
                         <Route exact path='/app/datos/categoria/:id' component={DinamicCategoria} />
+                        <Route exact path='/app/datos/empresa/:id' component={DinamicEmpresa} />
+                        <Route exact path='/app/datos/ponente/:id' component={DinamicPonente}/>
+                        <Route exact path='/app/datos/certificado/:id' component={DinamicCertificado}/>
+                        <Route exact path='/app/datos/formulario/:id' component={DinamicFormulario}/>
 
+
+                        {/*ROUTES PARA LA SECCIÓN DE EVENTOS*/}
                         <Route exact path='/app/eventos' component={Eventos} />
                         <Route exact path='/app/eventos/crear' component={CrearEvento} />
 

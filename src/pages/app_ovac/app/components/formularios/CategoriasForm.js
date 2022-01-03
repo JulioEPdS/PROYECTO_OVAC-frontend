@@ -204,7 +204,8 @@ export default class CategoriasModalForm extends Component {
                     //400 bad request
                     if (error.response.status === 409) {
                         this.setState({                                                        
-                            duplicated: true
+                            duplicated: true,
+                            sendingdata: false
                         })
                     }
                     else {
