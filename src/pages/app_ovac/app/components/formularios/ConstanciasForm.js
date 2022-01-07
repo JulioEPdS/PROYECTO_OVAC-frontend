@@ -426,8 +426,7 @@ export default class ConstanciasModalForm extends Component {
                     <Button
                         content="Crear constancia"
                         labelPosition='right'
-                        icon='checkmark'
-                        disabled={this.buttonEnabler()}
+                        icon='checkmark'                        
                         onClick={this.handleSubmit}
                         positive
                     />

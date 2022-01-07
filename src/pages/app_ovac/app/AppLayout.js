@@ -80,7 +80,7 @@ export default class HomeLayout extends Component {
                         </Header.Content>
                     </Header>
                 </Menu.Item>
-                <Menu.Item
+                {/*<Menu.Item
                     name='tutorial'
                     active={activeItem === 'tutorial'}
                     onClick={this.handleItemClick}
@@ -90,8 +90,9 @@ export default class HomeLayout extends Component {
                     name={user.name}
                     active={activeItem === user.name}
                     onClick={this.handleItemClick}
-                />
-                <Menu.Item >
+                />  BOTONES ALTERNATIVOS, SIN FUNCIONALIDAD*/}
+                <Menu.Item position='right'>
+                    
                     <Button animated onClick={this.handleLogout} style={{ color: '#FFFFFF', backgroundColor: '#3F3D56' }}>
                         <Button.Content visible>Salir</Button.Content>
                         <Button.Content hidden>
@@ -105,6 +106,7 @@ export default class HomeLayout extends Component {
             <Grid>
                 <Grid.Column style={{ width: '12vw', marginLeft: '1rem', marginTop: '0.5rem' }}>
                     <Menu fluid vertical tabular color='brown'>
+
                         <Menu.Item
                             icon='home'
                             name='inicio'
@@ -112,6 +114,7 @@ export default class HomeLayout extends Component {
                             onClick={this.handleItemClick}
                             as={NavLink} to='/app/inicio'
                         />
+
                         <Menu.Item
                             icon='calendar'
                             name='eventos'
@@ -119,6 +122,7 @@ export default class HomeLayout extends Component {
                             onClick={this.handleItemClick}
                             as={NavLink} to='/app/eventos'
                         />
+
                         <Menu.Item
                             icon='edit'
                             name='registros'
@@ -126,6 +130,7 @@ export default class HomeLayout extends Component {
                             onClick={this.handleItemClick}
                             as={NavLink} to='/app/datos'
                         />
+
                         <Menu.Item
                             icon='file alternate'
                             name='informes'
@@ -133,6 +138,7 @@ export default class HomeLayout extends Component {
                             onClick={this.handleItemClick}
                             as={NavLink} to='/app/anexos'
                         />
+
                     </Menu>
                 </Grid.Column>
 

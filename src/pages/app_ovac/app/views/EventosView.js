@@ -27,6 +27,7 @@ export default class ViewEventos extends Component {
         super(props)
         this.state = {
             eventos: [],
+            eventosactivos: [],
             historial: [],
             waitingeventos: true,
             waitinghistorial: true,
@@ -87,7 +88,7 @@ export default class ViewEventos extends Component {
     }
 
     render() {
-        const { eventos, waitingeventos, historial, waitinghistorial, fetcherrorE, fetcherrorH } = this.state
+        const { eventos,eventosactivos, waitingeventos, historial, waitinghistorial, fetcherrorE, fetcherrorH } = this.state
 
         const recomendaciones = ['No recargues la página completa :) intenta con el botón azul que está arriba a la derecha ', 'Si esta falla persiste comunica este problema']
         return (
@@ -145,12 +146,12 @@ export default class ViewEventos extends Component {
                                 _.times(5, (i) =>
                                     <CardPlaceholder key={i} />
                                 )
-                                : eventos.length === 0 && !fetcherrorE ?
+                                : eventosactivos.length === 0 && !fetcherrorE ?
                                     <>
                                         <Image size='small' src={empty} alt='No se hallaron datos' style={{ marginLeft: '32vw', marginTop: '10vh' }} />
                                         <Header icon='database' content='No se hallaron eventos en la base de datos' style={{ marginLeft: '23vw', color: '#3F3D56' }} />
                                     </>
-                                    : <Events eventos={eventos} />
+                                    : <Events eventos={eventosactivos} />
 
                             }
                         </Card.Group>
@@ -164,15 +165,15 @@ export default class ViewEventos extends Component {
                     </Segment>
 
                     <Transition.Group>
-                        {eventos.length > 0 ?
+                        {eventosactivos.length > 0 ?
                             <Header as='h5' style={{ color: '#c9a915' }}>
-                                Hay {eventos.length} eventos activos
+                                Hay {eventosactivos.length} eventos activos
                             </Header>
                             : waitingeventos ?
                                 <Header as='h5' style={{ color: '#c9a915' }}>
                                     Recibiendo datos...
                                 </Header>
-                                : eventos.length === 0 &&
+                                : eventosactivos.length === 0 &&
                                 <Header as='h5' style={{ color: '#c9a915' }}>
                                     No hay eventos activos
                                 </Header>

@@ -1,14 +1,13 @@
 import { Component } from 'react'
-import { Header, Icon, Segment, Image, Button, Form, Grid, Card, Statistic, Transition, Message, Modal } from 'semantic-ui-react'
+import { Header, Icon, Segment, Image, Button, Form, Transition, Message, Modal, List } from 'semantic-ui-react'
 import { AuthContext } from '../../../../../auth/AuthContext'
 import Axios from 'axios'
 import config from '../../../../../config'
 
-//import Axios from 'axios'
+
 import { NavLink } from 'react-router-dom'
 
 import chore from '../../img/chore.svg'
-
 
 export default class DinamicFormulario extends Component {
 
@@ -19,7 +18,7 @@ export default class DinamicFormulario extends Component {
         super(props)
         this.state = {
             //Extraer el parámetro de ID para consultar 
-            categoria: this.props.match.params.id,
+            formulario: this.props.match.params.id,
 
             //Estado del componente
             edit: false,
@@ -32,16 +31,11 @@ export default class DinamicFormulario extends Component {
             successdisable: false,
             errordisable: false,
 
-            //Valores iniciales de los campos
-            Nombre: '...',
-            Descripcion: '...',
-            Color: 'grey',
-            Icono: 'question',
+            //Valores iniciales de los campos            
+            name: 'esperando...',
+            description: 'esperando...',
+            fields: 'esperando...'
 
-
-            //Valores estadísticas
-            Eventos: 0,
-            Interesados: 0
         }
 
         this.fetchInfo = this.fetchInfo.bind(this)
@@ -57,7 +51,7 @@ export default class DinamicFormulario extends Component {
 
     componentDidMount() {
         //FETCH THE INFO
-        //this.fetchInfo()
+        this.fetchInfo()
     }
 
 
@@ -67,58 +61,38 @@ export default class DinamicFormulario extends Component {
     async fetchInfo() { /* CONSULTA */
         this.setState({ waiting: true })
         const { user } = this.context
-        const { categoria } = this.state
-        Axios.get(config.REACT_APP_apiURL + '/objects/categorias/' + categoria, {
+        const { formulario } = this.state
+        Axios.get(config.REACT_APP_apiURL + '/objects/formularios/' + formulario, {
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }
         })
             .then((result) => {
-
-                const name = result.data[0][0].name
-                const description = result.data[0][0].description
-                const icon = result.data[0][0].icon
-                const color = result.data[0][0].color
-
-                const eventos = result.data[1][0].Eventos
-                const personas = result.data[2][0].Personas
+                console.log(result)
 
                 this.setState({
 
                     waiting: false,
 
-                    //Información categoría
-                    Nombre: name,
-                    Descripcion: description,
-                    Icono: icon,
-                    Color: color,
+                    //CAMPOS
+                    name: result.data[0].name,
+                    description: result.data[0].description,
+                    fields: result.data[0].fields,
 
-
-                    //Estadísticas
-                    Eventos: eventos,
-                    Interesados: personas
                 })
 
             })
-
     }
 
     async updateInfo() { /* ACTUALIZACIÓN DE INFORMACIÓN */
-
         this.setState({ waiting: true })
-
         const { user } = this.context
-
-
-        const { categoria, Nombre, Descripcion, Color, Icono } = this.state
-
-        Axios.put(config.REACT_APP_apiURL + '/objects/categorias/update', {
-            id: categoria,
-            name: Nombre,
-            description: Descripcion,
-            color: Color,
-            icon: Icono,
-            user_id: user.id
+        const { formulario, name, description, fields } = this.state
+        Axios.put(config.REACT_APP_apiURL + '/objects/formulario/update', {
+            id: formulario,
+            name: name,
+            description: description,
+            fields: fields
         },
             {
                 headers: {
@@ -142,15 +116,15 @@ export default class DinamicFormulario extends Component {
         setTimeout(() => {
             this.fetchInfo()
             this.setState({ successending: false, errorsending: false })
-        }, 1000)
+        }, 3000)
     }
 
     async disable() { /* DESHABILITACIÓN */
-        const { categoria } = this.state
+        const { formulario } = this.state
         this.setState({ waiting: true })
         const { user } = this.context
 
-        Axios.delete(config.REACT_APP_apiURL + '/objects/categorias/delete/' + categoria, {
+        Axios.delete(config.REACT_APP_apiURL + '/objects/formulario/delete/' + formulario, {
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }
@@ -238,205 +212,214 @@ export default class DinamicFormulario extends Component {
             errorsending,
 
 
-            //Info y estadísticas
-            Nombre,
-            Descripcion,
-            Color,
-            Icono,
-            Eventos,
-            Interesados
+            //CAMPOS
+            name,
+            description,
+            fields
 
         } = this.state
         return (
-            <Segment basic style={{ height: '81vh' }}>
-                <Header as='h2' style={{ color: "#a95168" }}>
-                    <Icon name='th' />
+
+            <Segment basic style={{ height: '81vh', width: '50vw' }}>
+                <Header as='h2' style={{ color: "#BF5748" }}>
+                    <Icon name='clipboard list' />
                     <Header.Content>
-                        Detalles de la categoría
+                        Detalles de la formulario
                         <Header.Subheader>
-                            Aquí puedes editar o desactivar la categoría
+                            Aquí puedes editar o desactivar la formulario
                         </Header.Subheader>
                     </Header.Content>
                 </Header>
 
 
-                <Grid columns={2} style={{ marginTop: '.5rem' }}>
-                    <Grid.Row stretched>
-                        {/*IZQUIERDA */}
-                        <Grid.Column>
-                            <Segment stacked>
 
-                                <Form loading={waiting}>
+                <Segment stacked>
 
+                    <Form loading={waiting}>
 
-                                    <Form.Field>
-                                        <label>Nombre de la categoría</label>
-                                        <Form.Input
-                                            disabled={!edit}
-                                            placeholder='Nombre'
-                                            name='Nombre'
-                                            value={Nombre}
-                                            onChange={this.handleChange}
-                                        />
-                                    </Form.Field>
+                        <Form.Input
+                            disabled={!edit}
+                            label='Nombre del formulario'
+                            placeholder="Nombre del formulario"
+                            name='name'
+                            value={name}
+                            onChange={this.handleChange}
+                        />
 
 
-
-                                    <Form.Field>
-                                        <label>Descripción de la categoría</label>
-                                        <Form.TextArea
-                                            disabled={!edit}
-                                            placeholder='Descripción'
-                                            name='Descripcion'
-                                            value={Descripcion}
-                                            onChange={this.handleChange}
-                                        />
-                                    </Form.Field>
+                        <Form.Input
+                            disabled={!edit}
+                            label='Descripción del formulario'
+                            placeholder='Describa de manera objetiva para ayudar a identificar el formulario'
+                            name='description'
+                            value={description}
+                            onChange={this.handleChange}
+                        />
 
 
-                                    
+
+                        <Form.TextArea
+                            disabled={!edit}
+                            label='Fields (en crudo)'
+                            placeholder='información fields'
+                            name='fields'
+                            value={fields}
+                            onChange={this.handleChange}
+                        />
 
 
-                                    <Button
-                                        color={edit ? 'green' : 'blue'}
-                                        content={edit ? 'Guardar' : 'Editar'}
-                                        disabled={waiting}
-                                        onClick={(e, { content }) => this.handlePrimaryButton(content)}
-                                    />
 
-                                    <Button
-                                        color={edit ? 'grey' : 'black'}
-                                        disabled={waiting}
-                                        content={edit ? 'Cancelar' : 'Desactivar'}
-                                        onClick={(e, { content }) => this.handleSecondaryButton(content)}
-                                    />
+                        <Button
+                            color={edit ? 'green' : 'blue'}
+                            content={edit ? 'Guardar' : 'Editar'}
+                            disabled={waiting}
+                            onClick={(e, { content }) => this.handlePrimaryButton(content)}
+                        />
 
-                                    <Modal
-                                        open={open}
-                                        style={{ width: '50vw' }}>
+                        <Button
+                            color={edit ? 'grey' : 'black'}
+                            disabled={waiting}
+                            content={edit ? 'Cancelar' : 'Desactivar'}
+                            onClick={(e, { content }) => this.handleSecondaryButton(content)}
+                        />
+                    </Form>
 
-                                        <Modal.Header style={{ color: 'red' }}>
-                                            <Icon name='exclamation' /> Porfavor confirme la desactivación
-                                        </Modal.Header>
-                                        <Modal.Content>
-                                            <Modal.Description style={{ marginBottom: '1rem' }}>
-                                                <Header>Está seguro de querer desactivar la categoría: {Nombre}?
-                                                    <Header.Subheader>Esta acción no eliminará datos, pero dejará la categoría fuera de línea
-                                                        para su uso posterior, la información y eventos relacionados con esta categoría no se verán afectados.
+                </Segment>
 
-                                                        Considere que ya no podrá modificarse información alguna de esta categoría.
-                                                    </Header.Subheader>
-                                                </Header>
-                                            </Modal.Description>
+                <Modal
+                    open={open}
+                    style={{ width: '50vw' }}>
 
+                    <Modal.Header style={{ color: 'red' }}>
+                        <Icon name='exclamation' /> Porfavor confirme la desactivación
+                    </Modal.Header>
+                    <Modal.Content>
+                        <Modal.Description style={{ marginBottom: '1rem' }}>
+                            <Header>Está seguro de querer desactivar el formulario: {name}?
+                                <Header.Subheader>Esta acción no eliminará datos, pero dejará al formulario fuera de línea
+                                    para su uso posterior, la información y eventos relacionados con este formulario no se verán afectados.
 
-                                            <Transition.Group>
-                                                {successdisable &&
-                                                    <Message
-                                                        info
-                                                        header='Se desactivó la categoría exitosamente'                                                        
-                                                    />
-                                                }
-                                                {errordisable &&
-                                                    <Message
-                                                        error
-                                                        header='No se pudo desactivar la categoría'
-                                                        content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
-                                                    />
-                                                }
-                                            </Transition.Group>
-                                        </Modal.Content>
-                                        <Modal.Actions>
-                                            <Button
-                                                color='black'
-                                                onClick={this.handleModalCancel}>
-                                                Cancelar
-                                            </Button>
-                                            <Button
-                                                content='Desactivar'
-                                                labelPosition='right'
-                                                icon='trash alternate'
-                                                negative
-                                                onClick={this.handleDisableCat}
-                                            />
-                                        </Modal.Actions>
-                                    </Modal>
+                                    Considere que ya no podrá modificarse información alguna de este formulario.
+                                </Header.Subheader>
+                            </Header>
+                        </Modal.Description>
 
 
-                                </Form>
-                            </Segment>
-                        </Grid.Column>
-
-                        {/*DERECHA */}
-                        <Grid.Column >
-                            {/*SUPERIOR */}
-                            <Grid.Row>
-                                <Segment basic style={{ height: '32vh' }} loading={waiting}>
-                                    <Header color='grey' content='Vista previa' />
-                                    <Card color={Color} fluid>
-                                        <Card.Content>
-                                            <Card.Header>
-                                                <Icon name={Icono} color={Color} />
-                                                {Nombre}
-                                            </Card.Header>
-                                            <Card.Description>
-                                                {Descripcion}
-                                            </Card.Description>
-
-                                        </Card.Content>
-                                    </Card>
-
-                                </Segment>
-
-                            </Grid.Row>
-                            {/*INFERIOR*/}
-                            <Grid.Row>
-                                <Segment style={{ height: '22vh' }} loading={waiting}>
-                                    <Header color='grey'>Estadisticas</Header>
-                                    <Statistic.Group>
-                                        <Statistic>
-                                            <Statistic.Value>{Eventos}</Statistic.Value>
-                                            <Statistic.Label>Eventos</Statistic.Label>
-                                        </Statistic>
-                                        <Statistic color={Color}>
-                                            <Statistic.Value>{Interesados}</Statistic.Value>
-                                            <Statistic.Label>Interesados</Statistic.Label>
-                                        </Statistic>
-                                    </Statistic.Group>
-
-                                </Segment>
-
-                            </Grid.Row>
-
-                        </Grid.Column>
-                    </Grid.Row>
+                        <Transition.Group>
+                            {successdisable &&
+                                <Message
+                                    info
+                                    header='Se desactivó la formulario exitosamente'
+                                />
+                            }
+                            {errordisable &&
+                                <Message
+                                    error
+                                    header='No se pudo desactivar la formulario'
+                                    content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
+                                />
+                            }
+                        </Transition.Group>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button
+                            color='black'
+                            onClick={this.handleModalCancel}>
+                            Cancelar
+                        </Button>
+                        <Button
+                            content='Desactivar'
+                            labelPosition='right'
+                            icon='trash alternate'
+                            negative
+                            onClick={this.handleDisableCat}
+                        />
+                    </Modal.Actions>
+                </Modal>
 
 
-                </Grid>
+                {/*<Segment style={{ position: 'fixed', top: '25vh', right: '5vw', width: '30vw' }}>
+                    <List relaxed>
 
-                <Button floated='right' as={NavLink} to='/app/datos' content='Regresar' icon='left arrow' labelPosition='left' />
+                        <List.Item>
+                            <List.Icon name='industry' />
+                            <List.Content>
+                                <List.Header>Nombre de la formulario</List.Header>
+                                <List.Description>{name}</List.Description>
+                            </List.Content>
+                        </List.Item>
 
+                        <List.Item>
+                            <List.Icon name='building' />
+                            <List.Content>
+                                <List.Header>Razón social</List.Header>
+                                <List.Description>{r_social}</List.Description>
+                            </List.Content>
+                        </List.Item>
+
+                        <List.Item>
+                            <List.Icon name='dolly' />
+                            <List.Content>
+                                <List.Header>
+                                    Giro, producto o servicio
+                                </List.Header>
+                                <List.Description>{girops}</List.Description>
+                            </List.Content>
+                        </List.Item>
+
+                        <List.Item>
+                            <List.Icon name='address card' />
+                            <List.Content>
+                                <List.Header>Persona representante</List.Header>
+                                <List.Description>{representante}</List.Description>
+                            </List.Content>
+                        </List.Item>
+
+                        <List.Item>
+                            <List.Icon name='fax' />
+                            <List.Content>
+                                <List.Header>Teléfonos de contacto</List.Header>
+                                <List.Description>{phone}</List.Description>
+                            </List.Content>
+                        </List.Item>
+
+
+                    </List>
+                        </Segment>*/}
+
+
+                <Image size='medium' src={chore} alt='Registros' style={{ position: 'fixed', left: '-7vw', top: '65vh', zIndex: '-20', opacity: '.6' }} />
                 <Transition.Group>
                     {successending &&
                         <Message
+                            style={{ position: 'fixed', bottom: '3vh', left: '15vw' }}
                             success
                             header='Información guardada correctamente'
-                            content='Los eventos relacionados con esta categoría conservarán la relación'
+                            content='Los eventos relacionados con este formulario conservarán su relación, pero los datos se han actualizado'
                         />
                     }
                     {errorsending &&
                         <Message
+                            style={{ position: 'fixed', bottom: '3vh', left: '15vw' }}
                             error
                             header='No se pudo actualizar la información'
                             content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
                         />
                     }
-
                 </Transition.Group>
 
 
-                <Image size='medium' src={chore} alt='Registros' style={{ position: 'fixed', left: '-7vw', top: '65vh', zIndex: '-20', opacity: '.6' }} />
-            </Segment>
+                <Button
+                    style={{ position: 'fixed', bottom: '5vh', right: '3vw' }}
+                    floated='right'
+                    as={NavLink} to='/app/datos'
+                    content='Regresar'
+                    icon='left arrow'
+                    labelPosition='left'
+                />
+
+            </Segment >
+
         )
     }
 }

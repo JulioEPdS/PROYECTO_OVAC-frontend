@@ -7,6 +7,7 @@ import ListPlaceholder from "../objetos/placeholders/ListItemPlaceholder"
 import _ from 'lodash'
 
 import empty from '../../img/empty.svg'
+import Formulario from "../objetos/Formulario"
 
 
 export default class Formularios extends Component {
@@ -27,7 +28,7 @@ export default class Formularios extends Component {
         const { fetchError, waitingFetch, formularios } = this.props
         return (
             <Segment>
-                <Header as="h3" style={{ color: "#bf5748" }}>
+                <Header as="h3" style={{ color: "#BF5748" }}>
                     <Icon name="clipboard list" />
                     <Header.Content>
                         Formularios
@@ -50,7 +51,9 @@ export default class Formularios extends Component {
                                     <Header content='No se hallaron formularios en la base de datos' style={{ color: '#3F3D56' }} />
                                 </>
                                 //Presentar formularios
-                                : <>Presentar formularios</>
+                                : formularios.map?.(
+                                    (formulario) => (<Formulario key={formulario.id} formulario={formulario} />)
+                                )
                         }
                     </List>
                     <Transition.Group animation='fade'>
