@@ -89,6 +89,8 @@ export default class DinamicConstancia extends Component {
         this.handlePrimaryButton = this.handlePrimaryButton.bind(this)
         this.handleSecondaryButton = this.handleSecondaryButton.bind(this)
 
+        this.print = this.print.bind(this)
+
 
     }
 
@@ -127,7 +129,7 @@ export default class DinamicConstancia extends Component {
     async fetchInfo() { /* CONSULTA */
 
         //FORCE ALL TO DEFAULT THEN RELOAD INFO FROM API
-        this.setState({ 
+        this.setState({
             waiting: true,
             //FIELDS
             name: '',
@@ -286,7 +288,7 @@ export default class DinamicConstancia extends Component {
                         sendingdata: false,
                         errorsending: false,
                         successending: true,
-                    })                    
+                    })
 
                 },
                 (error) => {
@@ -294,7 +296,7 @@ export default class DinamicConstancia extends Component {
                     //401 no autorizado
                     //400 bad request
                     if (error.response.status === 409) {
-                        this.setState({                            
+                        this.setState({
                             sendingdata: false,
                             successending: false
                         })
@@ -307,7 +309,7 @@ export default class DinamicConstancia extends Component {
                             successending: false
                         })
                     }
-                    
+
 
                 }
             )
@@ -316,13 +318,13 @@ export default class DinamicConstancia extends Component {
                 this.setState({
                     sendingdata: false,
                     errorsending: true
-                })                          
+                })
             })
 
-            setTimeout(() => {
-                this.fetchInfo()
-                this.setState({ successending: false, errorsending: false })
-            }, 3000)
+        setTimeout(() => {
+            this.fetchInfo()
+            this.setState({ successending: false, errorsending: false })
+        }, 3000)
 
 
     }
@@ -359,6 +361,23 @@ export default class DinamicConstancia extends Component {
             .catch(
                 (error) => { console.log(error) }
             )
+    }
+
+    async print() {
+        const { constancia } = this.state
+
+        await Axios({
+            url: config.REACT_APP_apiURL + '/creadesdebd/' + constancia,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'file.png'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
     }
 
 
@@ -718,6 +737,15 @@ export default class DinamicConstancia extends Component {
                     content='Regresar'
                     icon='left arrow'
                     labelPosition='left'
+                />
+
+                <Button
+                    style={{ position: 'fixed', bottom: '15vh', right: '3vw' }}
+                    floated='right'
+                    content='Imprimir prueba'
+                    icon='download'
+                    labelPosition='left'
+                    onClick={this.print}
                 />
 
                 <Transition.Group>

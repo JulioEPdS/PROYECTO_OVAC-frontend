@@ -197,7 +197,7 @@ export default class ConstanciasModalForm extends Component {
 
     async handleSubmit() {
         //IMPORT THE STATE DATA/////////////////////////////////////////////////////
-        const { name, type, description, basename, base } = this.state
+        const { name, type, description, basename } = this.state
         const { user } = this.context
 
         //GENERATE CONFIG STRING////////////////////////////////////////////////////

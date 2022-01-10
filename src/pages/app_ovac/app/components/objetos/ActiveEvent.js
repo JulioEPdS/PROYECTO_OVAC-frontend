@@ -1,9 +1,10 @@
 import { Card, Icon, Label} from 'semantic-ui-react'
 import Moment from 'moment'
 import 'moment/locale/es-mx'
+import { NavLink } from 'react-router-dom'
 
 
-const Evento = ({evento}) => {
+const ActiveEvento = ({evento}) => {
 
     //Dynamic style depending on which type gets
     const typecolor = evento?.type === 'Curso' ? 'orange' : evento?.type === 'Plática' ? 'red' : evento?.type==='Congreso' ? 'brown' : evento?.type==='Capacitación' ? 'teal' : 'olive'
@@ -25,7 +26,7 @@ const Evento = ({evento}) => {
 
     //Building the response chunck element
     return (
-        <Card link key={evento?.UUID}>
+        <Card link key={evento?.id} as={NavLink} to={'/app/eventos/activo/'+evento.id}>
             <Card.Content>                        
                 {/*<Label color={typecolor} ribbon='right' icon={typeicon} content={evento.type}/>*/}
                 <Card.Header>{evento?.title}</Card.Header>
@@ -39,4 +40,4 @@ const Evento = ({evento}) => {
     )
 }
 
-export default Evento
+export default ActiveEvento

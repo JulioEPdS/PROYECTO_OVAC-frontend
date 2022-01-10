@@ -1,16 +1,13 @@
-import { AuthContext } from '../../../../auth/AuthContext'
+import { AuthContext } from '../../../../../auth/AuthContext'
 import { Image, Segment, Header, Button, Icon, Step, Transition, Form, Message } from 'semantic-ui-react'
 import { Component } from 'react'
 import Axios from 'axios'
 
-import config from '../../../../config'
+import config from '../../../../../config'
 //import { NavLink } from 'react-router-dom'
 
-import events from '../img/events.svg'
-import EmpresasModalForm from '../components/formularios/EmpresasForm'
-import ConstanciasModalForm from '../components/formularios/ConstanciasForm'
-import FormulariosModalForm from '../components/formularios/FormulariosForm'
-import PonentesModalForm from '../components/formularios/PonentesForm'
+import events from '../../img/events.svg'
+
 
 const tipoproyecto = [
     { key: 'inst', text: 'Institucional', value: 'Institucional' },
@@ -25,7 +22,7 @@ const tipoevento = [
     { key: 'Otro', text: 'Otro', value: 'Otro' }
 ]
 
-export default class CreateEvent extends Component {
+export default class DinamicHistorialEvento extends Component {
     static contextType = AuthContext
     constructor(props) {
         super(props)
@@ -173,30 +170,30 @@ export default class CreateEvent extends Component {
 
 
                     if (constancias.length > 0) {
-                        constancias.map((x, i) => (
+                        constancias.map((x, i) => {
                             opciones = [...opciones, { key: x.id, text: x.name + ', ' + x.description, value: x.id }]
 
-                        ))
+                        })
                         this.setState({ constancias: opciones })
                         opciones = []
                     }
 
 
                     if (empresas.length > 0) {
-                        empresas.map((x, i) => (
+                        empresas.map((x, i) => {
                             opciones = [...opciones, { key: x.id, text: x.name + ', ' + x.r_social, value: x.id }]
 
-                        ))
+                        })
                         this.setState({ empresas: opciones })
                         opciones = []
                     }
 
 
                     if (formularios.length > 0) {
-                        formularios.map((x, i) => (
+                        formularios.map((x, i) => {
                             opciones = [...opciones, { key: x.id, text: x.name + ', ' + x.description, value: x.id }]
 
-                        ))
+                        })
                         this.setState({ formularios: opciones })
                         opciones = []
                     }
@@ -204,9 +201,9 @@ export default class CreateEvent extends Component {
 
 
                     if (ponentes.length > 0) {
-                        ponentes.map((x, i) => (
+                        ponentes.map((x, i) => {
                             opciones = [...opciones, { key: x.id, text: x.nombre + ' ' + x.apellido_p + ' ' + x.apellido_m + ', ' + x.email, value: x.id }]
-                        ))
+                        })
                         this.setState({ ponentes: opciones })
                         opciones = []
                     }
@@ -547,71 +544,7 @@ export default class CreateEvent extends Component {
 
                         {locator === 1 &&
                             <div>
-                                <Header color='grey'>Por favor seleccione o registre:</Header>
-                                {/*<CategoriasModalForm customstyle={{
-                                    backgroundColor: "#a95168",
-                                    color: "#ffffff"
-                                }} disabled={waitingFetch || fetchError} parentCallback={this.promptReloadData} />*/}
-
-
-                                <Form>
-
-                                    <Form.Select
-                                        label='Constancia'
-                                        placeholder='Seleccione'
-                                        value={certdoc_id}
-                                        name='certdoc_id'
-                                        options={constancias}
-                                        onChange={this.handleChange}
-
-                                    />
-
-                                    <ConstanciasModalForm
-                                        disabled={waitingFetch || fetchError}
-                                        parentCallback={this.promptReloadData}
-                                    />
-
-
-
-                                    <Form.Select
-                                        label='Empresa'
-                                        placeholder='Seleccione'
-                                        value={organismo}
-                                        name='organismo'
-                                        options={empresas}
-                                        onChange={this.handleChange}
-                                    />
-                                    <EmpresasModalForm disabled={waitingFetch || fetchError} parentCallback={this.promptReloadData} />
-
-
-
-
-
-                                    <Form.Select
-                                        label='Formulario'
-                                        placeholder='Seleccione'
-                                        name='formulario'
-                                        value={formulario}
-                                        options={formularios}
-                                        onChange={this.handleChange}
-                                    />
-
-                                    <FormulariosModalForm disabled={waitingFetch || fetchError} parentCallback={this.promptReloadData} />
-
-
-                                    <Form.Select
-                                        label='Ponente'
-                                        placeholder='Seleccione'
-                                        value={ponente_id}
-                                        name='ponente_id'
-                                        options={ponentes}
-                                        onChange={this.handleChange}
-                                    />
-                                    <PonentesModalForm disabled={waitingFetch || fetchError} parentCallback={this.promptReloadData} />
-
-
-
-                                </Form>
+                                
 
 
                             </div>

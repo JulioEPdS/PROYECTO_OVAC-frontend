@@ -27,6 +27,9 @@ import DinamicEmpresa from './views/dinamicviews/DinamicEmpresa'
 import DinamicPonente from './views/dinamicviews/DinamicPonente'
 import DinamicConstancia from './views/dinamicviews/DinamicConstancia'
 import DinamicFormulario from './views/dinamicviews/DinamicFormulario'
+import DinamicWaitingEvento from './views/dinamicviews/DinamicWaitingEvento'
+import DinamicActiveEvento from './views/dinamicviews/DinamicActiveEvento'
+import DinamicHistorialEvento from './views/dinamicviews/DinamicHistorialEvento'
 
 
 export default class HomeLayout extends Component {
@@ -59,7 +62,7 @@ export default class HomeLayout extends Component {
 
     render() {
         const { activeItem } = this.state
-        const { user } = this.context
+        //const { user } = this.context
 
         return (<>
 
@@ -92,7 +95,7 @@ export default class HomeLayout extends Component {
                     onClick={this.handleItemClick}
                 />  BOTONES ALTERNATIVOS, SIN FUNCIONALIDAD*/}
                 <Menu.Item position='right'>
-                    
+
                     <Button animated onClick={this.handleLogout} style={{ color: '#FFFFFF', backgroundColor: '#3F3D56' }}>
                         <Button.Content visible>Salir</Button.Content>
                         <Button.Content hidden>
@@ -151,14 +154,18 @@ export default class HomeLayout extends Component {
                         <Route exact path='/app/datos' component={Datos} />
                         <Route exact path='/app/datos/categoria/:id' component={DinamicCategoria} />
                         <Route exact path='/app/datos/empresa/:id' component={DinamicEmpresa} />
-                        <Route exact path='/app/datos/ponente/:id' component={DinamicPonente}/>
-                        <Route exact path='/app/datos/constancia/:id' component={DinamicConstancia}/>
-                        <Route exact path='/app/datos/formulario/:id' component={DinamicFormulario}/>
+                        <Route exact path='/app/datos/ponente/:id' component={DinamicPonente} />
+                        <Route exact path='/app/datos/constancia/:id' component={DinamicConstancia} />
+                        <Route exact path='/app/datos/formulario/:id' component={DinamicFormulario} />
 
 
                         {/*ROUTES PARA LA SECCIÓN DE EVENTOS*/}
                         <Route exact path='/app/eventos' component={Eventos} />
                         <Route exact path='/app/eventos/crear' component={CrearEvento} />
+
+                        <Route exact path='/app/eventos/espera/:id' component={DinamicWaitingEvento} />
+                        <Route exact path='/app/eventos/activo/:id' component={DinamicActiveEvento} />
+                        <Route exact path='/app/eventos/historial/:id' component={DinamicHistorialEvento} />
 
 
                         <Route exact path='/app/anexos' component={Anexos} />

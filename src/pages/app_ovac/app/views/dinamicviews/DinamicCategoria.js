@@ -1,6 +1,6 @@
+import { AuthContext } from '../../../../../auth/AuthContext'
 import { Component } from 'react'
 import { Header, Icon, Segment, Image, Button, Form, Grid, Card, Statistic, Transition, Message, Modal } from 'semantic-ui-react'
-import { AuthContext } from '../../../../../auth/AuthContext'
 import Axios from 'axios'
 import config from '../../../../../config'
 
@@ -71,7 +71,7 @@ const colors = [
 
 export default class DinamicCategoria extends Component {
 
-    //Necesario para extraer token e id
+    //Necesario para extraer token e id user
     static contextType = AuthContext
 
     constructor(props) {
@@ -85,6 +85,8 @@ export default class DinamicCategoria extends Component {
             waiting: false,
             successending: false,
             errorsending: false,
+
+            fetchError: false,
 
             //Estado del modal
             open: false,
@@ -159,6 +161,11 @@ export default class DinamicCategoria extends Component {
                 })
 
             })
+            .catch(
+                (error) => {
+                    this.setState({ fetchError: true, waiting: false })
+                }
+            )
 
     }
 
@@ -295,6 +302,8 @@ export default class DinamicCategoria extends Component {
 
             errordisable,
             errorsending,
+
+            fetchError,
 
 
             //Info y estadísticas
@@ -519,6 +528,13 @@ export default class DinamicCategoria extends Component {
                             error
                             header='No se pudo actualizar la información'
                             content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
+                        />
+                    }
+                    {fetchError &&
+                        <Message
+                        error
+                        header='Error al consultar datos'
+                        content='No se ha podido consultar los datos de la categoría, por favor revise su conexión a internet o informe este problema a sistemas'
                         />
                     }
 
