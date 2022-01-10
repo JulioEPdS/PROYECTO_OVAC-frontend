@@ -226,12 +226,12 @@ export default class DinamicPonente extends Component {
         return (
 
             <Segment basic style={{ height: '81vh', width: '50vw' }}>
-                <Header as='h2' style={{ color: "#007A99" }}>
-                    <Icon name='industry' />
+                <Header as='h2' style={{ color: "#00C9A9" }}>
+                    <Icon name='comment' />
                     <Header.Content>
-                        Detalles de la empresa
+                        Detalles del ponente
                         <Header.Subheader>
-                            Aquí puedes editar o desactivar la empresa
+                            Aquí puedes editar o desactivar al ponente
                         </Header.Subheader>
                     </Header.Content>
                 </Header>

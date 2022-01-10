@@ -25,7 +25,7 @@ export default class Constancias extends Component {
         return (
             <Segment>
 
-                <Header as="h3" style={{ color: "#aa8f18" }}>
+                <Header as="h3" style={{ color: "#AA8F18" }}>
                     <Icon name="file alternate" />
                     <Header.Content>
                         Constancias
@@ -36,7 +36,7 @@ export default class Constancias extends Component {
                 </Header>
 
                 <Segment
-                    basic                    
+                    basic
                     style={{
                         overflow: "auto",
                         maxHeight: 150,
@@ -52,8 +52,8 @@ export default class Constancias extends Component {
                             ))
                             : constancias.length === 0 && !fetchError ?
                                 //No hay constancias en la base de datos
-                                <>                                                                        
-                                    <Image src={empty} size='tiny' floated="right"/>
+                                <>
+                                    <Image src={empty} size='tiny' floated="right" />
                                     <Header content='No se hallaron constancias en la base de datos' style={{ color: '#3F3D56' }} />
                                 </>
                                 //Aquí van las constancias halladas
@@ -75,7 +75,7 @@ export default class Constancias extends Component {
 
                 </Segment>
 
-                <ConstanciasModalForm
+                <ConstanciasModalForm                    
                     disabled={waitingFetch || fetchError}
                     parentCallback={this.prompReloadData}
                 />

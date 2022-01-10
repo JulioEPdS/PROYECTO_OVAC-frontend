@@ -1,6 +1,8 @@
+import Axios from 'axios'
 import { Component } from 'react'
-import { Button, Header, Modal, Icon, Form, Image } from 'semantic-ui-react'
+import { Button, Header, Modal, Icon, Form, Image, Transition, Message } from 'semantic-ui-react'
 import { AuthContext } from '../../../../../auth/AuthContext'
+import config from '../../../../../config'
 
 const tipos = [
     { key: 'cons', text: 'Constancia', value: 'CONSTANCIA' },
@@ -11,7 +13,7 @@ const tipos = [
 ]
 
 const datosAutomatizados = [
-    { key: 'tat', text: 'Texto antes del type', value: 'value1' },
+    { key: 'tat', text: 'Texto antes del tipo de documento', value: 'value1' },
     { key: 'tdd', text: 'Tipo de documento', value: 'value2' },
     { key: 'ndp', text: 'Nombre de la persona', value: 'value3' },
     { key: 'tae', text: 'Texto antes del Evento', value: 'value4' },
@@ -33,13 +35,14 @@ export default class ConstanciasModalForm extends Component {
             type: '',
             description: '',
             base: '', //CONTAINS IMAGE
+            basename: '',
 
 
             //MULTI OPTION SELECTION
             selection: [],
 
             //FIRST CONTENT, THEN STATE OF THE FIELD
-            TAT: '',//TEXTO ANTES TITULO
+            TAT: '',//TEXTO ANTES TIPO
             TATvisible: false,
 
             TDD: '',//TIPO DE DOCUMENTO
@@ -54,6 +57,12 @@ export default class ConstanciasModalForm extends Component {
 
             NDE: false,//NOMBRE DEL EVENTO
             LYF: false,//LUGAR Y FECHA
+
+            //Para definir los estados de envío            
+            sendingdata: false, //enviando
+            errorsending: false, //error al enviar
+            duplicated: false,
+            successending: false, //enviado correctamente
 
         }
 
@@ -97,17 +106,18 @@ export default class ConstanciasModalForm extends Component {
 
         }
 
-
     }
 
     handleInputChange(e) {
         this.setState({
             base: e.target.files[0],
+            basename: e.target.files[0]
         })
 
         if (e.target.files && e.target.files[0]) {
             this.setState({
-                base: URL.createObjectURL(e.target.files[0])
+                base: URL.createObjectURL(e.target.files[0]),
+                basename: e.target.files[0]
             });
         }
     }
@@ -164,9 +174,6 @@ export default class ConstanciasModalForm extends Component {
         else {
             this.setState({ LYF: false })
         }
-
-
-
     }
 
     buttonEnabler() {
@@ -188,27 +195,91 @@ export default class ConstanciasModalForm extends Component {
         }
     }
 
-    handleSubmit() {
-        //IMPORT THE STATE DATA
-        const { name, type, description, base } = this.state
+    async handleSubmit() {
+        //IMPORT THE STATE DATA/////////////////////////////////////////////////////
+        const { name, type, description, basename, base } = this.state
+        const { user } = this.context
 
-        const config = this.configConstructor()
+        //GENERATE CONFIG STRING////////////////////////////////////////////////////
+        const configstring = this.configConstructor()
 
         //INITIALIZE THE DATA TO SEND///////////////////////////////////////////////
         //INITIALIZE FORMDATA///////////////////////////////////////////////////////
         var bodyFormData = new FormData()
+
         bodyFormData.append('name', name)
         bodyFormData.append('type', type)
         bodyFormData.append('description', description)
-        bodyFormData.append('base', base)
-        bodyFormData.append('config', config)
+        bodyFormData.append('base', basename)
+        bodyFormData.append('config', configstring)
+        bodyFormData.append('user_id', user.id)
 
-        for (var value of bodyFormData.values()) {
-            console.log(value)
-        }
+        await Axios({
+            method: 'POST',
+            url: config.REACT_APP_apiURL + '/objects/certdoc',
+            data: bodyFormData,
+            headers: {
+                "Authorization": "Bearer " + user.token,
+                "Content-Type": "multipart/form-data"
+            }
+        })
+            .then(
+                (result) => {
+                    this.setState({
+                        duplicated: false,
+                        sendingdata: false,
+                        errorsending: false,
+                        successending: true,
+                    })
+                    setTimeout(() => {
+                        this.props.parentCallback('reload')
+                        this.setState({ open: false, successending: false })
+                    }, 2000)
+
+                },
+                (error) => {
+                    //409 ya existe alguno en BD
+                    //401 no autorizado
+                    //400 bad request
+                    if (error.response.status === 409) {
+                        this.setState({
+                            duplicated: true,
+                            sendingdata: false,
+                            successending: false
+                        })
+                    }
+                    else {
+                        this.setState({
+                            duplicated: false,
+                            sendingdata: false,
+                            errorsending: true,
+                            successending: false
+                        })
+                    }
+
+                    console.log(error.response)
+
+                }
+            )
+            .catch((error) => {
+                //error al enviar data, no se pudo comunicar con el servidor                
+                this.setState({
+                    sendingdata: false,
+                    errorsending: true
+                })
+                setTimeout(() => {
+                    this.props.parentCallback('reload')
+                    this.setState({ open: false })
+                }, 2000)
+            })
+
 
     }
 
+
+    //CONFIGURATION//////////////////////////////////////////////////////////////////////////
+    //Designada a crear la cadena de configuración de la constancia//////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
     configConstructor() {
         const { TAT, TATvisible, TDD, TDDprint, NDP, TAE, TAEvisible, NDE, LYF } = this.state
 
@@ -224,6 +295,7 @@ export default class ConstanciasModalForm extends Component {
 
         //ADD TDD TO CONFIG IF has content
         if (TDDprint && TDD.length > 0) {
+            //NECESARIO POR SI SE TRATA (O NO) DE PRIMERA CONFIG
             if (config.length > 2) {
                 config = config + ','
             }
@@ -232,6 +304,7 @@ export default class ConstanciasModalForm extends Component {
 
         //ADD NDP TO CONFIG IF true
         if (NDP) {
+            //NECESARIO POR SI SE TRATA (O NO) DE PRIMERA CONFIG
             if (config.length > 2) {
                 config = config + ','
             }
@@ -240,6 +313,7 @@ export default class ConstanciasModalForm extends Component {
 
         //ADD TAE TO CONFIG IF has content
         if (TAEvisible && TAE.length > 0) {
+            //NECESARIO POR SI SE TRATA (O NO) DE PRIMERA CONFIG
             if (config.length > 2) {
                 config = config + ','
             }
@@ -248,6 +322,7 @@ export default class ConstanciasModalForm extends Component {
 
         //ADD NDE TO CONFIG IF
         if (NDE) {
+            //NECESARIO POR SI SE TRATA (O NO) DE PRIMERA CONFIG
             if (config.length > 2) {
                 config = config + ','
             }
@@ -256,6 +331,7 @@ export default class ConstanciasModalForm extends Component {
 
         //ADD LYF TO CONFIG IF
         if (LYF) {
+            //NECESARIO POR SI SE TRATA (O NO) DE PRIMERA CONFIG
             if (config.length > 2) {
                 config = config + ','
             }
@@ -276,6 +352,12 @@ export default class ConstanciasModalForm extends Component {
             description,
             base,
 
+
+            sendingdata, //enviando
+            errorsending, //error al enviar
+            duplicated,
+            successending, //enviado correctamente
+
             //VISIBLE STATES
             TATvisible, TDDvisible, TAEvisible,
             TDDprint,
@@ -289,10 +371,13 @@ export default class ConstanciasModalForm extends Component {
                 style={{ width: '50vw', marginLeft: '-20vw' }}
                 trigger={
                     <Button
-                        animated='fade'
-                        floated="right"
-                        style={{ backgroundColor: "#aa8f18", color: "#ffffff" }}
-                        disabled={disabled}
+                        animated='fade'                        
+                        floated='right'
+                        style={{ 
+                            backgroundColor: "#aa8f18", 
+                            color: "#ffffff"                                                    
+                        }}                                                
+                        disabled={disabled}                        
                         onClick={this.open}
                     >
                         <Button.Content visible>
@@ -317,27 +402,27 @@ export default class ConstanciasModalForm extends Component {
                     <Image size='medium' src={base} alt='Esperando base...' style={{ position: 'fixed', left: '55vw', top: '40vh' }} />
 
                     {
-                        TATvisible && <p style={{ position: 'fixed', left: '63vw', top: '23.5vw', width: '20vw', fontSize: '0.4rem' }}>{TAT}</p>
+                        TATvisible && <p style={{ position: 'fixed', left: '56vw', top: '24vw', width: '20vw', textAlign: 'center', fontSize: '0.4rem' }}>{TAT}</p>
                     }
 
                     {
-                        TDDprint && <p style={{ position: 'fixed', left: '55vw', top: '43vw', width: '20vw' }}>{TDD}</p>
+                        TDDprint && <p style={{ position: 'fixed', left: '56vw', top: '25vw', width: '20vw', textAlign: 'center', color: '#b6a459' }}>{TDD}</p>
                     }
 
                     {
-                        NDP && <p style={{ position: 'fixed', left: '55vw', top: '45vw', width: '20vw' }}>NOMBRE DE LA PERSONA</p>
+                        NDP && <p style={{ position: 'fixed', left: '56vw', top: '27vw', width: '20vw', textAlign: 'center', color: '#343432' }}>NOMBRE DE LA PERSONA</p>
                     }
 
                     {
-                        TAEvisible && <p style={{ position: 'fixed', left: '55vw', top: '47vw', width: '20vw' }}>{TAE}</p>
+                        TAEvisible && <p style={{ position: 'fixed', left: '56vw', top: '29vw', width: '20vw', textAlign: 'center', fontSize: '0.5rem' }}>{TAE}</p>
                     }
 
                     {
-                        NDE && <p style={{ position: 'fixed', left: '55vw', top: '49vw', width: '20vw' }}>"NOMBRE DEL EVENTO"</p>
+                        NDE && <p style={{ position: 'fixed', left: '56vw', top: '30vw', width: '20vw', textAlign: 'center', color: '#343432' }}>"NOMBRE DEL EVENTO"</p>
                     }
 
                     {
-                        LYF && <p style={{ position: 'fixed', left: '55vw', top: '51vw', width: '20vw' }}>TUXTLA GUTIERREZ, CHIAPAS; 00/00/0000</p>
+                        LYF && <p style={{ position: 'fixed', left: '56vw', top: '32vw', width: '20vw', textAlign: 'center', color: '#343432', fontSize: '0.4rem' }}>TUXTLA GUTIERREZ, CHIAPAS; 00/00/0000</p>
                     }
 
 
@@ -371,7 +456,7 @@ export default class ConstanciasModalForm extends Component {
                                 placeholder='Elige alguno:'
                             />
                             <Header size='tiny' floated='right'>Formato base del documento (imágen)
-                                <input style={{ backgroundColor: '' }} id="base" type="file" onChange={this.handleInputChange} />
+                                <input style={{ backgroundColor: '' }} name="base" type="file" onChange={this.handleInputChange} />
                             </Header>
                         </Form.Group>
 
@@ -415,6 +500,29 @@ export default class ConstanciasModalForm extends Component {
                         }
 
                     </Form>
+                    <Transition.Group>
+                        {successending &&
+                            <Message
+                                success
+                                header='Se creó exitosamente'
+                                content='Ya se puede utilizar esta constancia en los eventos'
+                            />
+                        }
+                        {errorsending &&
+                            <Message
+                                error
+                                header='No se pudo crear la constancia :('
+                                content='No hubo comunicación con el servidor, revise su conexión a internet, o informe este problema a sistemas'
+                            />
+                        }
+                        {duplicated &&
+                            <Message
+                                warning
+                                header='Ya existe una constancia con este mismo nombre'
+                                content='Los registros duplicados generan conlictos, modifique el nombre o utilice el certificado que ya existe'
+                            />
+                        }
+                    </Transition.Group>
                 </Modal.Content>
 
                 <Modal.Actions>
@@ -426,7 +534,8 @@ export default class ConstanciasModalForm extends Component {
                     <Button
                         content="Crear constancia"
                         labelPosition='right'
-                        icon='checkmark'                        
+                        icon='checkmark'
+                        loading={sendingdata}
                         onClick={this.handleSubmit}
                         positive
                     />

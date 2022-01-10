@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Header, Icon, Segment, Image, Button, Form, Transition, Message, Modal, List } from 'semantic-ui-react'
+import { Header, Icon, Segment, Image, Button, Form, Transition, Message, Modal} from 'semantic-ui-react'
 import { AuthContext } from '../../../../../auth/AuthContext'
 import Axios from 'axios'
 import config from '../../../../../config'
@@ -8,6 +8,12 @@ import config from '../../../../../config'
 import { NavLink } from 'react-router-dom'
 
 import chore from '../../img/chore.svg'
+
+const tipos = [
+    { key: 'text', text: 'Texto', value: 'text' },
+    { key: 'numeric', text: 'Numérico', value: 'numeric' },
+    { key: 'date', text: 'Fecha', value: 'date' }
+]
 
 export default class DinamicFormulario extends Component {
 
@@ -34,7 +40,7 @@ export default class DinamicFormulario extends Component {
             //Valores iniciales de los campos            
             name: 'esperando...',
             description: 'esperando...',
-            fields: 'esperando...'
+            fields: []
 
         }
 
@@ -45,9 +51,32 @@ export default class DinamicFormulario extends Component {
         this.handleSecondaryButton = this.handleSecondaryButton.bind(this)
         this.handleModalCancel = this.handleModalCancel.bind(this)
 
+        this.handleAddClick = this.handleAddClick.bind(this)
+        this.handleRemoveClick = this.handleRemoveClick.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
+
     }
 
     handleChange = (e, { name, value }) => this.setState({ [name]: value })
+    handleInputChange = (e, { name, value, index }) => {
+        //const { name, value } = e.target
+        const { fields } = this.state
+
+        const list = [...fields]
+        list[index][name] = value
+        this.setState({ fields: list })
+    }
+    handleAddClick = () => {
+        const { fields } = this.state
+        const list = [...fields, { fieldname: "", fieldtype: "" }]
+        this.setState({ fields: list })
+    }
+    handleRemoveClick = index => {
+        const { fields } = this.state
+        const list = [...fields];
+        list.splice(index, 1);
+        this.setState({ fields: list })
+    }
 
     componentDidMount() {
         //FETCH THE INFO
@@ -77,9 +106,9 @@ export default class DinamicFormulario extends Component {
                     //CAMPOS
                     name: result.data[0].name,
                     description: result.data[0].description,
-                    fields: result.data[0].fields,
+                    fields: JSON.parse(result.data[0].fields),
 
-                })
+                })                            
 
             })
     }
@@ -88,11 +117,12 @@ export default class DinamicFormulario extends Component {
         this.setState({ waiting: true })
         const { user } = this.context
         const { formulario, name, description, fields } = this.state
-        Axios.put(config.REACT_APP_apiURL + '/objects/formulario/update', {
+        Axios.put(config.REACT_APP_apiURL + '/objects/formularios/update', {
             id: formulario,
             name: name,
             description: description,
-            fields: fields
+            fields: JSON.stringify(fields),
+            user_id: user.id
         },
             {
                 headers: {
@@ -124,7 +154,7 @@ export default class DinamicFormulario extends Component {
         this.setState({ waiting: true })
         const { user } = this.context
 
-        Axios.delete(config.REACT_APP_apiURL + '/objects/formulario/delete/' + formulario, {
+        Axios.delete(config.REACT_APP_apiURL + '/objects/formularios/delete/' + formulario, {
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }
@@ -258,14 +288,51 @@ export default class DinamicFormulario extends Component {
 
 
 
-                        <Form.TextArea
-                            disabled={!edit}
-                            label='Fields (en crudo)'
-                            placeholder='información fields'
-                            name='fields'
-                            value={fields}
-                            onChange={this.handleChange}
-                        />
+                        {fields.map((x, i) => {
+                            return (
+                                <Form.Group>
+                                    <Form.Input
+                                        label='Nombre del campo'
+                                        placeholder='NSS, Clave de elector, Contraseña...'
+                                        name='fieldname'
+                                        index={i}
+                                        value={x.fieldname}
+                                        disabled={!edit}
+                                        onChange={this.handleInputChange}
+                                    />
+
+                                    <Form.Select
+                                        options={tipos}
+                                        label='Tipo de dato'
+                                        placeholder='Seleccione el tipo de dato'
+                                        name='fieldtype'
+                                        index={i}
+                                        value={x.fieldtype}
+                                        disabled={!edit}
+                                        onChange={this.handleInputChange}
+                                    />
+
+                                    <div style={{ marginTop: '4vh' }}>
+                                        {fields.length !== 1 &&
+                                            <Button
+                                                compact
+                                                disabled={!edit}
+                                                onClick={() => this.handleRemoveClick(i)}
+                                            >Quitar</Button>}
+                                        {fields.length - 1 === i &&
+                                            <Button
+                                                compact
+                                                disabled={!edit}
+                                                onClick={this.handleAddClick}
+                                            >Añadir</Button>}
+                                    </div>
+
+                                </Form.Group>
+
+
+                            )
+
+                        })}
 
 
 

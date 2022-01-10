@@ -25,7 +25,7 @@ import Datos from './views/DatosView' //VIEW PRINCIPAL/////////////
 import DinamicCategoria from './views/dinamicviews/DinamicCategoria'
 import DinamicEmpresa from './views/dinamicviews/DinamicEmpresa'
 import DinamicPonente from './views/dinamicviews/DinamicPonente'
-import DinamicCertificado from './views/dinamicviews/DinamicCertificado'
+import DinamicConstancia from './views/dinamicviews/DinamicConstancia'
 import DinamicFormulario from './views/dinamicviews/DinamicFormulario'
 
 
@@ -152,7 +152,7 @@ export default class HomeLayout extends Component {
                         <Route exact path='/app/datos/categoria/:id' component={DinamicCategoria} />
                         <Route exact path='/app/datos/empresa/:id' component={DinamicEmpresa} />
                         <Route exact path='/app/datos/ponente/:id' component={DinamicPonente}/>
-                        <Route exact path='/app/datos/certificado/:id' component={DinamicCertificado}/>
+                        <Route exact path='/app/datos/constancia/:id' component={DinamicConstancia}/>
                         <Route exact path='/app/datos/formulario/:id' component={DinamicFormulario}/>
 
 

@@ -62,10 +62,10 @@ export default class Datos extends Component {
 
 
 
-    fetchregistros() {
+    async fetchregistros() {
         this.setState({ waitingFetch: true, fetchError: false })
         const { user } = this.context
-        Axios.get(config.REACT_APP_apiURL+'/objects/allobjects', {
+        await Axios.get(config.REACT_APP_apiURL+'/objects/allobjects', {
             headers: {
                 'Authorization': 'Bearer ' + user.token
             }

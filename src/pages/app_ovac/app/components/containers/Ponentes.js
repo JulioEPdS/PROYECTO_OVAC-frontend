@@ -27,7 +27,7 @@ export default class Ponentes extends Component {
         const { ponentes, fetchError, waitingFetch } = this.props
         return (
             <Segment>
-                <Header as="h3" style={{ color: "#00c9a9" }}>
+                <Header as="h3" style={{ color: "#00C9A9" }}>
                     <Icon name="comment" />
                     <Header.Content>
                         Ponentes

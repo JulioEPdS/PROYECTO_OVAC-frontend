@@ -35,7 +35,12 @@ export default class Categorias extends Component {
                         </Header.Subheader>
                     </Header.Content>
                 </Header>
-                <CategoriasModalForm disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack} />
+                <CategoriasModalForm customstyle={{
+                    position: 'absolute',
+                    top: '1vh',
+                    right: '.2vw', backgroundColor: "#a95168",
+                    color: "#ffffff"
+                }} disabled={waitingFetch || fetchError} parentCallback={this.reloadDataCallBack} />
                 <Segment basic style={{
                     height: '130px',
                     overflowX: 'auto',
@@ -59,7 +64,7 @@ export default class Categorias extends Component {
                             : categorias.length === 0 && !fetchError ?
                                 //No hay categorias en base de datos
                                 <>
-                                    <Image src={empty} size='small' floated="right"/>
+                                    <Image src={empty} size='small' floated="right" />
                                     <Header content='Parece ser que no hay categorías en la base de datos' style={{ color: '#3F3D56' }} />
                                 </>
                                 //Presentamos los elementos porque no hubo error al consultar

@@ -104,7 +104,7 @@ export default class ViewEventos extends Component {
                     disabled={fetcherrorE || waitingeventos}
                     color='olive'
                     floated='right'
-                    as={NavLink} to='/ovac/eventos/crear'
+                    as={NavLink} to='/app/eventos/crear'
                 />
 
                 <Grid.Row>

@@ -97,16 +97,7 @@ export default class CategoriasModalForm extends Component {
         this.open = this.open.bind(this)
 
     }
-
-    /*handleChange(e) {
-        const { name, value } = e.target;
-        this.setState({
-            [name]: value,
-            successending: false,
-            errorsending: false,
-            duplicated: false
-        });
-    }*/
+    
 
     handleChange = (e, { name, value }) => this.setState({
         [name]: value,
@@ -245,7 +236,7 @@ export default class CategoriasModalForm extends Component {
             successending
 
         } = this.state
-        const { disabled } = this.props
+        const { disabled, customstyle } = this.props
         return (
             <Modal
                 open={open}
@@ -253,13 +244,7 @@ export default class CategoriasModalForm extends Component {
                 trigger={
                     <Button
                         animated='fade'
-                        style={{
-                            backgroundColor: "#a95168",
-                            color: "#ffffff",
-                            position: 'absolute',
-                            top: '1vh',
-                            right: '.2vw'
-                        }}
+                        style={customstyle}
                         disabled={disabled}
                         onClick={this.open}
                     >
